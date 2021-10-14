@@ -1,4 +1,4 @@
-package com.resurrection.movies.data.db.entity
+package com.resurrection.movies.data.model
 
 class RatingsModel {
     var source: String? = null

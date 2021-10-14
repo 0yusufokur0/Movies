@@ -1,6 +1,11 @@
 package com.resurrection.movies.ui.main.detail
 
+import android.graphics.Color.green
+import android.graphics.PorterDuff
+import android.graphics.PorterDuffColorFilter
 import android.os.Bundle
+import android.widget.ImageView
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
@@ -22,19 +27,31 @@ class DetailFragment : BaseBottomSheetFragment<FragmentDetailBinding>() {
         return R.layout.fragment_detail
     }
     override fun init(savedInstanceState: Bundle?) {
+            binding.favoriteImageView.changeIconColor(false)
+
         val data = arguments?.getString("cryptoId")
         data?.let {
             viewModel.getMovieDetail(data)
         }
 
         binding.favoriteImageView.setOnClickListener {
-            // add room data base
+            // add room database
+            binding.favoriteImageView.changeIconColor(true)
         }
 
         viewModel.movieDetail.observe(viewLifecycleOwner, Observer {
             binding.movieDetail = it
 
         })
+    }
+
+    private infix fun ImageView.changeIconColor(isFavourite: Boolean) {
+        val color = if (isFavourite) R.color.green else R.color.red
+
+        this.colorFilter = PorterDuffColorFilter(
+            ContextCompat.getColor(requireContext(), color),
+            PorterDuff.Mode.SRC_IN
+        )
     }
 
 }

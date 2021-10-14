@@ -3,10 +3,10 @@ package com.resurrection.movies.data.db
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import com.resurrection.movies.data.db.dao.InvioDao
-import com.resurrection.movies.data.db.entity.InvioModel
+import com.resurrection.movies.data.model.SearchItem
 
 @Database(
-    entities = [InvioModel::class],
+    entities = [SearchItem::class],
     version = 1
 )
 

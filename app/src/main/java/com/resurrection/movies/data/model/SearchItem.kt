@@ -1,16 +1,18 @@
 package com.resurrection.movies.data.model
 
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
-
+@Entity
 data class SearchItem(
+    @PrimaryKey
+    @SerializedName("imdbID")
+    var imdbID: String,
     @SerializedName("Type")
     var type: String? = null,
 
     @SerializedName("Year")
     var year: String? = null,
-
-    @SerializedName("imdbID")
-    var imdbID: String? = null,
 
     @SerializedName("Poster")
     var poster: String? = null,

@@ -1,7 +1,6 @@
 package com.resurrection.movies.data.model
 
 import androidx.room.PrimaryKey
-import com.resurrection.movies.data.db.entity.RatingsModel
 
 data class MovieModel (
     @PrimaryKey

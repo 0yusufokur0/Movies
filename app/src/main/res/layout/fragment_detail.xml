@@ -13,49 +13,84 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fillViewport="true"
-        android:padding="30dp"
         app:behavior_hideable="true"
+        android:padding="30dp"
         app:layout_behavior="android.support.design.widget.BottomSheetBehavior">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/motionLayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:ignore="MissingConstraints">
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                tools:ignore="MissingConstraints">
+
+                <androidx.cardview.widget.CardView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:cardBackgroundColor="@color/white"
+                    app:cardCornerRadius="50dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    tools:ignore="MissingConstraints">
+
+                    <View
+                        android:layout_width="50dp"
+                        android:layout_height="4dp"
+                        android:background="#767676"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        tools:ignore="MissingConstraints" />
+                    <!--YOUR CONTENT-->
+                </androidx.cardview.widget.CardView>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical">
 
+
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
+
                     <androidx.appcompat.widget.AppCompatTextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:background="#BA0000"
                         android:gravity="center"
+                        android:textColor="?attr/movieTextColor"
                         android:text="@{movieDetail.title}"
-                        android:textSize="20sp"
+                        android:textSize="25sp"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
                         tools:ignore="MissingConstraints" />
 
                     <androidx.appcompat.widget.AppCompatImageView
                         android:id="@+id/favoriteImageView"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
                         android:src="@drawable/ic_round_star_24"
+                        app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
                         tools:ignore="MissingConstraints" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <ImageView
                     android:id="@+id/detailImageView"
+                    android:layout_marginTop="10dp"
                     loadImageFromUrl="@{movieDetail.poster}"
                     android:layout_width="match_parent"
-                    android:layout_height="250dp"
+                    android:layout_height="500dp"
                     tools:ignore="ContentDescription,MissingConstraints" />
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
@@ -68,6 +103,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="start"
+                        android:textColor="?attr/movieTextColor"
                         android:text="@{ `Director: ` + movieDetail.director}"
                         tools:ignore="MissingConstraints"
                         tools:text="Director " />
@@ -77,6 +113,7 @@
                         android:layout_height="wrap_content"
                         android:gravity="end"
                         android:text="@{ `Imdb: `+movieDetail.imdbRating}"
+                        android:textColor="?attr/movieTextColor"
                         tools:ignore="MissingConstraints"
                         tools:text="Imdb" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
@@ -94,6 +131,7 @@
                         android:gravity="start"
                         android:text="@{ `Writer: ` + movieDetail.writer}"
                         app:layout_constraintEnd_toStartOf="@+id/movieYear"
+                        android:textColor="?attr/movieTextColor"
                         app:layout_constraintStart_toStartOf="parent"
                         tools:text="writer "
                         tools:ignore="MissingConstraints" />
@@ -104,7 +142,7 @@
                         android:layout_height="wrap_content"
                         android:gravity="end"
                         android:text="@{ `Year: `+movieDetail.year}"
-
+                        android:textColor="?attr/movieTextColor"
                         app:layout_constraintEnd_toEndOf="parent"
                         tools:text="year"
                         tools:ignore="MissingConstraints" />
@@ -113,6 +151,7 @@
                 <androidx.appcompat.widget.AppCompatTextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:textColor="?attr/movieTextColor"
                     android:text="@{`Descriptoin: `+movieDetail.plot}" />
 
             </LinearLayout>
