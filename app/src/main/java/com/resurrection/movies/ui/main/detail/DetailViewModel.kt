@@ -18,7 +18,9 @@ open class DetailViewModel  @Inject constructor(val invioRepository: InvioReposi
 
     private var movieDetailJob: Job? = null
     private var saveMovieItemJob: Job? = null
+    private var movieFavoriteStateItemJob: Job? = null
 
+    var isFavorite = MutableLiveData<Boolean>()
     var movieDetail = MutableLiveData<MovieDetails>()
 
     fun getMovieDetail(id: String) {
@@ -30,6 +32,17 @@ open class DetailViewModel  @Inject constructor(val invioRepository: InvioReposi
     fun saveMovie(searchItem: SearchItem) {
         saveMovieItemJob = CoroutineScope(Dispatchers.IO).launch {
             invioRepository.dao.insertMovie(searchItem)
+        }
+    }
+    fun getMovieFavoriState(id:String){
+        movieFavoriteStateItemJob = CoroutineScope(Dispatchers.IO).launch {
+            var temp = invioRepository.dao.getMovieById(id)
+            temp?.let {
+                isFavorite.postValue(true)
+            }?: run {
+                isFavorite.postValue(false)
+            }
+
         }
     }
 

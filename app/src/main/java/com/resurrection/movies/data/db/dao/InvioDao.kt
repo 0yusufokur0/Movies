@@ -12,6 +12,10 @@ interface InvioDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertMovie(movie:SearchItem)
 
-    @Query("SELECT * FROM searchitem")
-    suspend fun getCryptoFavorite(): List<SearchItem>
+    @Query("SELECT * FROM search_item")
+    suspend fun getFavoriteMovies(): List<SearchItem>
+
+    @Query("SELECT * FROM search_item where  imdbId like :imdbID")
+    suspend fun getMovieById(imdbID:String): SearchItem
+
 }

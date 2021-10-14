@@ -29,11 +29,12 @@ class DetailFragment : BaseBottomSheetFragment<FragmentDetailBinding>() {
         return R.layout.fragment_detail
     }
     override fun init(savedInstanceState: Bundle?) {
-            binding.favoriteImageView.changeIconColor(false)
-
+        binding.favoriteImageView.changeIconColor(false)
         val data = arguments?.getString("cryptoId")
+
         data?.let {
             viewModel.getMovieDetail(data)
+            viewModel.getMovieFavoriState(data)
         }
 
         binding.favoriteImageView.setOnClickListener {
@@ -43,9 +44,13 @@ class DetailFragment : BaseBottomSheetFragment<FragmentDetailBinding>() {
             viewModel.saveMovie(SearchItem(movieDetail.imdbID,movieDetail.type,movieDetail.year,movieDetail.poster,movieDetail.title))
         }
 
-        viewModel.movieDetail.observe(viewLifecycleOwner, Observer {
-            binding.movieDetail = it
-
+        viewModel.movieDetail.observe(viewLifecycleOwner, Observer { binding.movieDetail = it })
+        viewModel.isFavorite.observe(viewLifecycleOwner, Observer {
+            if (it){
+                binding.favoriteImageView.changeIconColor(true)
+            }else{
+                binding.favoriteImageView.changeIconColor(false)
+            }
         })
     }
 

@@ -3,11 +3,11 @@ package com.resurrection.movies.data.model
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
-@Entity
+@Entity(tableName = "search_item")
 data class SearchItem(
     @PrimaryKey
     @SerializedName("imdbID")
-    var imdbID: String,
+    val imdbID: String,
     @SerializedName("Type")
     var type: String? = null,
 
