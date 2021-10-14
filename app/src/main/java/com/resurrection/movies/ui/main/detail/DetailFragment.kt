@@ -10,6 +10,8 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.resurrection.movies.R
+import com.resurrection.movies.data.model.MovieDetails
+import com.resurrection.movies.data.model.SearchItem
 import com.resurrection.movies.databinding.FragmentDetailBinding
 import com.resurrection.movies.ui.base.BaseBottomSheetFragment
 import dagger.hilt.android.AndroidEntryPoint
@@ -37,6 +39,8 @@ class DetailFragment : BaseBottomSheetFragment<FragmentDetailBinding>() {
         binding.favoriteImageView.setOnClickListener {
             // add room database
             binding.favoriteImageView.changeIconColor(true)
+            var movieDetail:MovieDetails = binding.movieDetail as MovieDetails
+            viewModel.saveMovie(SearchItem(movieDetail.imdbID,movieDetail.type,movieDetail.year,movieDetail.poster,movieDetail.title))
         }
 
         viewModel.movieDetail.observe(viewLifecycleOwner, Observer {
