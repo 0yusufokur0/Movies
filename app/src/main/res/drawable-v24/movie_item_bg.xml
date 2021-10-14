@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:bottom="0dp" android:top="0dp" android:right="0dp" android:left="0dp">
+
+        <shape >
+            <corners
+                android:bottomLeftRadius="@dimen/auth_rounded_num"
+                android:bottomRightRadius="@dimen/auth_rounded_num"
+                android:topLeftRadius="@dimen/auth_rounded_num"
+                android:topRightRadius="@dimen/auth_rounded_num" />
+            <solid android:color="?attr/bottomSheetBg" />
+        </shape>
+    </item>
+
+</layer-list>
+
+
