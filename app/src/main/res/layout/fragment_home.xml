@@ -7,17 +7,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".ui.main.home.HomeFragment">
-        <!--     <androidx.appcompat.widget.Toolbar
-                 android:id="@+id/toolbar"
-                 android:layout_width="match_parent"
-                 android:layout_height="?attr/actionBarSize"
-                 android:background="?attr/colorPrimary"
-                 android:contentInsetLeft="0dp"
-                 android:contentInsetStart="0dp"
-                 app:contentInsetLeft="0dp"
-                 app:contentInsetStart="0dp"
-                 app:popupTheme="@style/Theme.Invio"
-                 tools:ignore="MissingConstraints"/>-->
+
         <ProgressBar
             android:id="@+id/progressBar"
             android:layout_width="wrap_content"
@@ -29,11 +19,11 @@
             app:layout_constraintTop_toTopOf="@+id/homeRecyclerview" />
 
         <androidx.recyclerview.widget.RecyclerView
-            android:layout_marginRight="5dp"
-            android:layout_marginLeft="5dp"
             android:id="@+id/homeRecyclerview"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

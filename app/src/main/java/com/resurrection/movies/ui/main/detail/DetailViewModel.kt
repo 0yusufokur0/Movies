@@ -3,7 +3,7 @@ package com.resurrection.movies.ui.main.detail
 import androidx.lifecycle.MutableLiveData
 import com.resurrection.movies.data.model.MovieDetails
 import com.resurrection.movies.data.model.SearchItem
-import com.resurrection.movies.data.repository.InvioRepository
+import com.resurrection.movies.data.repository.MovieRepository
 import com.resurrection.movies.ui.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
@@ -13,36 +13,44 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-open class DetailViewModel  @Inject constructor(val invioRepository: InvioRepository) :
+open class DetailViewModel @Inject constructor(private val movieRepository: MovieRepository) :
     BaseViewModel() {
 
     private var movieDetailJob: Job? = null
     private var saveMovieItemJob: Job? = null
     private var movieFavoriteStateItemJob: Job? = null
-
+    private var removeMovieJob:Job? = null
     var isFavorite = MutableLiveData<Boolean>()
     var movieDetail = MutableLiveData<MovieDetails>()
 
     fun getMovieDetail(id: String) {
         movieDetailJob = CoroutineScope(Dispatchers.IO).launch {
-            var temp = invioRepository.api.getMovieDetail(id, "a2dd9d18")
+            val temp = movieRepository.api.getMovieDetail(id, "a2dd9d18")
             movieDetail.postValue(temp)
         }
     }
+
     fun saveMovie(searchItem: SearchItem) {
         saveMovieItemJob = CoroutineScope(Dispatchers.IO).launch {
-            invioRepository.dao.insertMovie(searchItem)
+            movieRepository.dao.insertMovie(searchItem)
         }
     }
-    fun getMovieFavoriState(id:String){
+
+    fun getMovieFavoriteState(id: String) {
         movieFavoriteStateItemJob = CoroutineScope(Dispatchers.IO).launch {
-            var temp = invioRepository.dao.getMovieById(id)
+            val temp = movieRepository.dao.getMovieById(id)
             temp?.let {
+                println(temp.imdbID)
                 isFavorite.postValue(true)
-            }?: run {
+            } ?:run {
                 isFavorite.postValue(false)
             }
 
+        }
+    }
+    fun removeMovie(searchItem: SearchItem){
+        removeMovieJob = CoroutineScope(Dispatchers.IO).launch {
+            movieRepository.dao.removeMovie(searchItem)
         }
     }
 

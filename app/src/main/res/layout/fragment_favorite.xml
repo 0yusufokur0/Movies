@@ -2,25 +2,28 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
-<androidx.constraintlayout.widget.ConstraintLayout
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".ui.main.favorite.FavoriteFragment">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:layout_marginRight="5dp"
-        android:layout_marginLeft="5dp"
-        android:id="@+id/favoriteRecyclerview"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        tools:context=".ui.main.favorite.FavoriteFragment">
 
-    <ProgressBar
-        android:id="@+id/progressBar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="@+id/favoriteRecyclerview"
-        app:layout_constraintEnd_toEndOf="@+id/favoriteRecyclerview"
-        app:layout_constraintStart_toStartOf="@+id/favoriteRecyclerview"
-        app:layout_constraintTop_toTopOf="@+id/favoriteRecyclerview" />
-</androidx.constraintlayout.widget.ConstraintLayout></layout>
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/favoriteRecyclerview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp" />
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@+id/favoriteRecyclerview"
+            app:layout_constraintEnd_toEndOf="@+id/favoriteRecyclerview"
+            app:layout_constraintStart_toStartOf="@+id/favoriteRecyclerview"
+            app:layout_constraintTop_toTopOf="@+id/favoriteRecyclerview" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

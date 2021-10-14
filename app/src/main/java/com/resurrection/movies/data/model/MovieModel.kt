@@ -2,7 +2,7 @@ package com.resurrection.movies.data.model
 
 import androidx.room.PrimaryKey
 
-data class MovieModel (
+data class MovieModel(
     @PrimaryKey
     val id: String,
     var title: String? = null,

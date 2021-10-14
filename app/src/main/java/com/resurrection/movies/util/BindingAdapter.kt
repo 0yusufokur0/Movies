@@ -1,24 +1,13 @@
 package com.resurrection.movies.util
 
-import android.app.ActionBar
-import android.graphics.Color.green
-import android.graphics.PorterDuff
-import android.graphics.PorterDuffColorFilter
-import android.widget.EditText
 import android.widget.ImageView
-import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.content.ContextCompat
-import androidx.core.widget.doAfterTextChanged
 import androidx.databinding.BindingAdapter
 import androidx.swiperefreshlayout.widget.CircularProgressDrawable
 import com.bumptech.glide.Glide
-import com.bumptech.glide.load.resource.bitmap.RoundedCorners
-
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
-
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
 import com.resurrection.movies.R
-
 
 @BindingAdapter("loadImageFromUrl")
 fun ImageView.loadImage(imageUrl: String?) {
@@ -26,7 +15,7 @@ fun ImageView.loadImage(imageUrl: String?) {
     val circularProgressDrawable = CircularProgressDrawable(this.context)
     circularProgressDrawable.strokeWidth = 10f
     circularProgressDrawable.centerRadius = 30f
-    circularProgressDrawable.setArrowDimensions(30f,30f)
+    circularProgressDrawable.setArrowDimensions(30f, 30f)
     circularProgressDrawable.start()
 
     imageUrl?.let {
@@ -37,7 +26,7 @@ fun ImageView.loadImage(imageUrl: String?) {
             .placeholder(circularProgressDrawable)
             .error(R.drawable.image_not_found)  // any image in case of error
             .apply(requestOptions)
-            .into(this);
+            .into(this)
     }
 }
 

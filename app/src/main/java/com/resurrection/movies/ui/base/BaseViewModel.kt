@@ -1,15 +1,12 @@
 package com.resurrection.movies.ui.base
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.ViewModel
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlin.coroutines.CoroutineContext
 
-abstract class BaseViewModel() : ViewModel(),
+abstract class BaseViewModel : ViewModel(),
 
     CoroutineScope {
 

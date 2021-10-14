@@ -2,9 +2,11 @@
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:bottom="0dp" android:top="0dp" android:right="0dp" android:left="0dp">
-
-        <shape >
+        android:bottom="0dp"
+        android:left="0dp"
+        android:right="0dp"
+        android:top="0dp">
+        <shape>
             <corners
                 android:bottomLeftRadius="@dimen/auth_rounded_num"
                 android:bottomRightRadius="@dimen/auth_rounded_num"

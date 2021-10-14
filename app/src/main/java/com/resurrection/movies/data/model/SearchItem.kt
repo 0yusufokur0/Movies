@@ -3,11 +3,13 @@ package com.resurrection.movies.data.model
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
+
 @Entity(tableName = "search_item")
 data class SearchItem(
     @PrimaryKey
     @SerializedName("imdbID")
     val imdbID: String,
+
     @SerializedName("Type")
     var type: String? = null,
 
@@ -19,16 +21,4 @@ data class SearchItem(
 
     @SerializedName("Title")
     var title: String? = null,
-) {
-
-
-    override fun toString(): String {
-        return "SearchItem{" +
-                "type = '" + type + '\''.toString() +
-                ",year = '" + year + '\''.toString() +
-                ",imdbID = '" + imdbID + '\''.toString() +
-                ",poster = '" + poster + '\''.toString() +
-                ",title = '" + title + '\''.toString() +
-                "}"
-    }
-}
+)

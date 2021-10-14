@@ -16,6 +16,7 @@
         <item name="movieTextColor">#000000</item>
 
     </style>
+
     <style name="ToolbarStyle" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="android:editTextColor">@color/white</item>
         <item name="actionMenuTextColor">@color/white</item>
@@ -26,12 +27,13 @@
     <style name="ToolbarTitleText" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
         <item name="android:textSize">18sp</item>
     </style>
+
     <style name="CustomBottomSheetDialogTheme" parent="Theme.Design.Light.BottomSheetDialog">
         <item name="bottomSheetStyle">@style/CustomBottomSheetStyle</item>
-
     </style>
+
     <style name="CustomBottomSheetStyle" parent="Widget.Design.BottomSheet.Modal">
         <item name="android:background">@drawable/bottom_sheet_bg</item>
-
     </style>
+
 </resources>

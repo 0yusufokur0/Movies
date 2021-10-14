@@ -8,8 +8,7 @@ data class MoviesDataList(
     var response: String,
     @SerializedName("Search")
     var search: List<MoviesHomeData>?
-)
-{
+) {
     data class MoviesHomeData(
         @SerializedName("Title")
         var Title: String,

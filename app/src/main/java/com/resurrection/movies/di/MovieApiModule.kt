@@ -9,10 +9,9 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
 
-
 @Module
 @InstallIn(SingletonComponent::class)
-object InvioApiModule {
+object MovieApiModule {
 
     @Provides
     @Singleton
@@ -26,6 +25,5 @@ object InvioApiModule {
     @Singleton
     fun createApi(retrofit: Retrofit): InvioApiService =
         retrofit.create(InvioApiService::class.java)
-
 
 }

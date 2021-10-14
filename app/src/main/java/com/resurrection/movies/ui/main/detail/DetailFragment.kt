@@ -1,14 +1,11 @@
 package com.resurrection.movies.ui.main.detail
 
-import android.graphics.Color.green
 import android.graphics.PorterDuff
 import android.graphics.PorterDuffColorFilter
 import android.os.Bundle
 import android.widget.ImageView
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.resurrection.movies.R
 import com.resurrection.movies.data.model.MovieDetails
 import com.resurrection.movies.data.model.SearchItem
@@ -19,38 +16,53 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class DetailFragment : BaseBottomSheetFragment<FragmentDetailBinding>() {
     private val viewModel: DetailViewModel by viewModels()
-
+    private var favoriteState: Boolean = false
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setStyle(BottomSheetDialogFragment.STYLE_NORMAL, R.style.CustomBottomSheetDialogTheme)
-
+        setStyle(STYLE_NORMAL, R.style.CustomBottomSheetDialogTheme)
     }
+
     override fun getLayoutRes(): Int {
         return R.layout.fragment_detail
     }
+
     override fun init(savedInstanceState: Bundle?) {
         binding.favoriteImageView.changeIconColor(false)
-        val data = arguments?.getString("cryptoId")
+        val data = arguments?.getString("movieId")
 
         data?.let {
             viewModel.getMovieDetail(data)
-            viewModel.getMovieFavoriState(data)
+            viewModel.getMovieFavoriteState(data)
         }
 
         binding.favoriteImageView.setOnClickListener {
-            // add room database
-            binding.favoriteImageView.changeIconColor(true)
-            var movieDetail:MovieDetails = binding.movieDetail as MovieDetails
-            viewModel.saveMovie(SearchItem(movieDetail.imdbID,movieDetail.type,movieDetail.year,movieDetail.poster,movieDetail.title))
+            val movieDetail: MovieDetails = binding.movieDetail as MovieDetails
+            val currentSearchItem =
+                SearchItem(
+                    movieDetail.imdbID,
+                    movieDetail.type,
+                    movieDetail.year,
+                    movieDetail.poster,
+                    movieDetail.title
+                )
+
+            if (favoriteState) {
+                viewModel.removeMovie(currentSearchItem)
+                binding.favoriteImageView.changeIconColor(false)
+                favoriteState = false
+            } else {
+                binding.favoriteImageView.changeIconColor(true)
+                binding.movieDetail as MovieDetails
+                viewModel.saveMovie(currentSearchItem)
+                favoriteState = true
+            }
+
         }
 
-        viewModel.movieDetail.observe(viewLifecycleOwner, Observer { binding.movieDetail = it })
-        viewModel.isFavorite.observe(viewLifecycleOwner, Observer {
-            if (it){
-                binding.favoriteImageView.changeIconColor(true)
-            }else{
-                binding.favoriteImageView.changeIconColor(false)
-            }
+        viewModel.movieDetail.observe(viewLifecycleOwner, { binding.movieDetail = it })
+        viewModel.isFavorite.observe(viewLifecycleOwner, {
+            favoriteState = it
+            binding.favoriteImageView.changeIconColor(favoriteState)
         })
     }
 

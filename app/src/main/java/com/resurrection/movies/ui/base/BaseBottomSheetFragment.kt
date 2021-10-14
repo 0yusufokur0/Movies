@@ -12,7 +12,8 @@ import androidx.lifecycle.LifecycleObserver
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
 
-abstract class BaseBottomSheetFragment<VDB : ViewDataBinding> : BottomSheetDialogFragment(), LifecycleObserver {
+abstract class BaseBottomSheetFragment<VDB : ViewDataBinding> : BottomSheetDialogFragment(),
+    LifecycleObserver {
 
     lateinit var binding: VDB
 

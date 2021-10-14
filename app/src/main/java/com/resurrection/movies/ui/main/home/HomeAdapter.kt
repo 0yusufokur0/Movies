@@ -6,8 +6,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.resurrection.movies.data.model.SearchItem
 import com.resurrection.movies.databinding.MovieItemBinding
 
-
-class HomeAdapter(var searchResults: ArrayList<SearchItem>, var onClick: (SearchItem) -> Unit) :
+class HomeAdapter(private var searchResults: ArrayList<SearchItem>, private var onClick: (SearchItem) -> Unit) :
     RecyclerView.Adapter<HomeAdapter.Holder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Holder {
@@ -18,7 +17,7 @@ class HomeAdapter(var searchResults: ArrayList<SearchItem>, var onClick: (Search
     }
 
     override fun onBindViewHolder(holder: Holder, position: Int) {
-        var cryptoMarketModel = searchResults.get(position)
+        val cryptoMarketModel = searchResults[position]
         holder.bind(cryptoMarketModel)
     }
 
