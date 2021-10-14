@@ -10,6 +10,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.core.widget.doAfterTextChanged
 import androidx.databinding.BindingAdapter
+import androidx.swiperefreshlayout.widget.CircularProgressDrawable
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 
@@ -21,36 +22,22 @@ import com.resurrection.movies.R
 
 @BindingAdapter("loadImageFromUrl")
 fun ImageView.loadImage(imageUrl: String?) {
-/*
-    this.load(imageUrl)
-*/
-    imageUrl?.let {
-/*        Glide.with(this)
-            .load(imageUrl) // image url
-            //.placeholder(R.drawable.placeholder) // any placeholder to load at start
-            //.error(R.drawable.imagenotfound)  // any image in case of error
-            .override(200, 200) // resizing
-            .centerCrop()
-            .into(this);  // imageview object
-        */
 
+    val circularProgressDrawable = CircularProgressDrawable(this.context)
+    circularProgressDrawable.strokeWidth = 10f
+    circularProgressDrawable.centerRadius = 30f
+    circularProgressDrawable.setArrowDimensions(30f,30f)
+    circularProgressDrawable.start()
+
+    imageUrl?.let {
         var requestOptions = RequestOptions()
         requestOptions = requestOptions.transforms(CenterCrop(), RoundedCorners(25))
         Glide.with(this)
             .load(imageUrl)/*.override(500,750)*/
+            .placeholder(circularProgressDrawable)
+            .error(R.drawable.image_not_found)  // any image in case of error
             .apply(requestOptions)
             .into(this);
-
-
     }
-
 }
 
-
-@BindingAdapter("afterTextChanged")
-fun EditText.afterEditTextChanged(onClick: () -> Unit) {
-    this.doAfterTextChanged {
-        onClick.invoke()
-    }
-    return
-}
