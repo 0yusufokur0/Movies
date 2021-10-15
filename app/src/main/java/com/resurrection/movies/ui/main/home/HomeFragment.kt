@@ -25,6 +25,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
     private var searchItemDetail: DetailFragment? = null
     private var adapter: HomeAdapter? = null
     private var toast: Toast? = null
+    private var searchString = ""
     override fun getLayoutRes(): Int {
         return R.layout.fragment_home
     }
@@ -32,6 +33,17 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
     @SuppressLint("ShowToast")
     override fun init(savedInstanceState: Bundle?) {
         viewModel.getMovie("Turkey")
+        setViewModelsObserve()
+        binding.swipeResfresLayout.setOnRefreshListener {
+            if (searchString.isNotEmpty()){
+                viewModel.getMovie(searchString)
+            }else{
+                viewModel.getMovie("Turkey")
+            }
+        }
+    }
+
+    private fun setViewModelsObserve(){
         viewModel.movie.observe(this, { searchResults ->
             binding.progressBar.visibility = View.VISIBLE
             searchResults?.let { searchResult ->
@@ -59,6 +71,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
                 toast = Toast.makeText(requireContext(), "no found result", Toast.LENGTH_SHORT)
                 toast?.show()
             }
+            binding.swipeResfresLayout.isRefreshing = false
         })
     }
 
@@ -87,6 +100,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
             override fun onQueryTextChange(newText: String): Boolean {
                 if (newText.isNotEmpty()) {
                     viewModel.getMovie(newText)
+                    searchString = newText
                 }
                 println(newText)
                 return false

@@ -23,6 +23,11 @@ class FavoriteFragment : BaseFragment<FragmentFavoriteBinding>() {
 
     override fun init(savedInstanceState: Bundle?) {
         viewModel.getAllFavoriteMovies()
+        setViewModelsObserve()
+        binding.swipeResfresLayout.setOnRefreshListener { viewModel.getAllFavoriteMovies() }
+    }
+
+    private fun setViewModelsObserve() {
         viewModel.movies.observe(viewLifecycleOwner, { it ->
             binding.favoriteRecyclerview.layoutManager = GridLayoutManager(requireContext(), 2)
 
@@ -35,8 +40,8 @@ class FavoriteFragment : BaseFragment<FragmentFavoriteBinding>() {
             }
             binding.favoriteRecyclerview.adapter = adapter
             binding.progressBar.visibility = View.GONE
+            binding.swipeResfresLayout.isRefreshing = false
         })
     }
-
 
 }
