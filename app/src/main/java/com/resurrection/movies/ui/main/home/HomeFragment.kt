@@ -47,7 +47,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
         viewModel.movie.observe(this, { searchResults ->
             binding.progressBar.visibility = View.VISIBLE
             searchResults?.let { searchResult ->
-                searchResult.search?.let { searchList ->
+                searchResult.data?.search?.let { searchList ->
                     toast?.cancel()
                     searchResultsList.addAll(searchList)
 

@@ -2,6 +2,9 @@ package com.resurrection.movies.data.remote
 
 import com.resurrection.movies.data.model.MovieDetails
 import com.resurrection.movies.data.model.SearchResults
+import com.resurrection.movies.util.Resource
+import kotlinx.coroutines.flow.Flow
+import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Query
 
@@ -14,7 +17,7 @@ interface InvioApiService {
         @Query(value = "s") searchTitle: String, @Query(value = "apiKey") apiKey: String, @Query(
             value = "page"
         ) pageIndex: Int
-    ): SearchResults
+    ): Response<SearchResults>
 
     @GET("?plot=full")
     suspend fun getMovieDetail(
@@ -22,3 +25,8 @@ interface InvioApiService {
         @Query(value = "apiKey") apiKey: String
     ) : MovieDetails
 }
+
+
+/*
+suspend fun getCoinsByParameter(parameter: String): Flow<Resource<List<CoinMarketEntity>>>
+*/

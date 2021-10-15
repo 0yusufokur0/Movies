@@ -25,32 +25,40 @@ open class DetailViewModel @Inject constructor(private val movieRepository: Movi
 
     fun getMovieDetail(id: String) {
         movieDetailJob = CoroutineScope(Dispatchers.IO).launch {
+/*
             val temp = movieRepository.api.getMovieDetail(id, "a2dd9d18")
+*/
+/*
             movieDetail.postValue(temp)
+*/
         }
     }
 
     fun saveMovie(searchItem: SearchItem) {
         saveMovieItemJob = CoroutineScope(Dispatchers.IO).launch {
+/*
             movieRepository.dao.insertMovie(searchItem)
+*/
         }
     }
 
     fun getMovieFavoriteState(id: String) {
         movieFavoriteStateItemJob = CoroutineScope(Dispatchers.IO).launch {
-            val temp = movieRepository.dao.getMovieById(id)
+ /*           val temp = movieRepository.dao.getMovieById(id)
             temp?.let {
                 println(temp.imdbID)
                 isFavorite.postValue(true)
             } ?:run {
                 isFavorite.postValue(false)
             }
-
+*/
         }
     }
     fun removeMovie(searchItem: SearchItem){
         removeMovieJob = CoroutineScope(Dispatchers.IO).launch {
+/*
             movieRepository.dao.removeMovie(searchItem)
+*/
         }
     }
 

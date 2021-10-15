@@ -19,8 +19,8 @@ class FavoriteViewModel @Inject constructor(private val movieRepository: MovieRe
 
     fun getAllFavoriteMovies() {
         job = CoroutineScope(Dispatchers.IO).launch {
-            val temp  = movieRepository.dao.getFavoriteMovies()
-            movies.postValue(temp)
+     /*       val temp  = movieRepository.dao.getFavoriteMovies()
+            movies.postValue(temp)*/
         }
     }
 
