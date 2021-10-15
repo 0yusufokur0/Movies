@@ -1,10 +1,12 @@
 package com.resurrection.movies.data.repository
 
 import com.resurrection.movies.data.db.dao.MovieDao
+import com.resurrection.movies.data.model.MovieDetails
 import com.resurrection.movies.data.model.SearchItem
 import com.resurrection.movies.data.model.SearchResults
 import com.resurrection.movies.data.remote.InvioApiService
 import com.resurrection.movies.util.Resource
+import com.resurrection.movies.util.getResourceByDatabaseRequest
 import com.resurrection.movies.util.getResourceByNetworkRequest
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -18,6 +20,30 @@ class MovieRepositoryImpl @Inject constructor(private val movieApiService: Invio
         page: Int
     ): Flow<Resource<SearchResults>> = flow {
         emit(getResourceByNetworkRequest {  movieApiService.getMovieById(id,apiKey,page)})
+    }
+
+    override suspend fun getMovieDetail(
+        imdbId: String,
+        apiKey: String
+    ): Flow<Resource<MovieDetails>> = flow {
+        emit(getResourceByNetworkRequest {  movieApiService.getMovieDetail(imdbId,apiKey)})
+    }
+
+    override suspend fun getMovieById(imdbID: String): Flow<Resource<SearchItem>> = flow {
+        emit(getResourceByDatabaseRequest { movieDao.getMovieById(imdbID) })
+    }
+
+
+    override suspend fun insertMovie(movie: SearchItem): Flow<Resource<Unit>> = flow{
+        emit(getResourceByDatabaseRequest { movieDao.insertMovie(movie) })
+    }
+
+    override suspend fun removeMovie(movie: SearchItem): Flow<Resource<Unit>> = flow{
+        emit(getResourceByDatabaseRequest { movieDao.removeMovie(movie) })
+    }
+
+    override suspend fun getFavoriteMovies(): Flow<Resource<List<SearchItem>>> = flow {
+        emit(getResourceByDatabaseRequest { movieDao.getFavoriteMovies() })
     }
 
 

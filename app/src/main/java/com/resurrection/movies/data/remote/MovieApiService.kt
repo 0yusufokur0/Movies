@@ -23,7 +23,7 @@ interface InvioApiService {
     suspend fun getMovieDetail(
         @Query(value = "i") imdbId : String,
         @Query(value = "apiKey") apiKey: String
-    ) : MovieDetails
+    ) : Response<MovieDetails>
 }
 
 

@@ -8,6 +8,9 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -19,6 +22,16 @@ class FavoriteViewModel @Inject constructor(private val movieRepository: MovieRe
 
     fun getAllFavoriteMovies() {
         job = CoroutineScope(Dispatchers.IO).launch {
+            movieRepository.getFavoriteMovies()
+                .onStart {
+
+                }.catch {
+
+                }.collect {
+                    it?.let {
+                        movies.postValue(it.data!!)
+                    }
+                }
      /*       val temp  = movieRepository.dao.getFavoriteMovies()
             movies.postValue(temp)*/
         }

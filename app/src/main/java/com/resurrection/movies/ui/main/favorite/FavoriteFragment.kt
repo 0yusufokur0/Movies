@@ -34,7 +34,7 @@ class FavoriteFragment : BaseFragment<FragmentFavoriteBinding>() {
             adapter = HomeAdapter(it as ArrayList<SearchItem>) {
                 searchItemDetail = DetailFragment()
                 val bundle = Bundle()
-                bundle.putString("cryptoId", it.imdbID)
+                bundle.putString("movieId", it.imdbID)
                 searchItemDetail!!.arguments = bundle
                 searchItemDetail!!.show(parentFragmentManager, "Bottom Sheet")
             }

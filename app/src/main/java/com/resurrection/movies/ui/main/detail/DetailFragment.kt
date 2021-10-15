@@ -59,7 +59,7 @@ class DetailFragment : BaseBottomSheetFragment<FragmentDetailBinding>() {
 
         }
 
-        viewModel.movieDetail.observe(viewLifecycleOwner, { binding.movieDetail = it })
+        viewModel.movieDetail.observe(viewLifecycleOwner, { binding.movieDetail = it.data!! })
         viewModel.isFavorite.observe(viewLifecycleOwner, {
             favoriteState = it
             binding.favoriteImageView.changeIconColor(favoriteState)
