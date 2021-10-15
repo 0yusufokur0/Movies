@@ -20,7 +20,6 @@ object MovieDaoModule {
     fun invioDatabase(@ApplicationContext context: Context): MovieDatabase =
         Room.databaseBuilder(context, MovieDatabase::class.java, "crypto").build()
 
-
     @Provides
     @Singleton
     fun invioDao(cryptoDatabase: MovieDatabase): MovieDao =

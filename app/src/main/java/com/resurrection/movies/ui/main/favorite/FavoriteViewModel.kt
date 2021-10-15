@@ -28,12 +28,11 @@ class FavoriteViewModel @Inject constructor(private val movieRepository: MovieRe
                 }.catch {
 
                 }.collect {
-                    it?.let {
+                    it.let {
                         movies.postValue(it.data!!)
                     }
                 }
-     /*       val temp  = movieRepository.dao.getFavoriteMovies()
-            movies.postValue(temp)*/
+
         }
     }
 

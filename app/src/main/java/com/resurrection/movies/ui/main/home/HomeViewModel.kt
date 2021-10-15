@@ -21,12 +21,12 @@ class HomeViewModel @Inject constructor(val movieRepository: MovieRepository) :
     var job: Job? = null
 
     private val _movie = MutableLiveData<Resource<SearchResults>>()
-    val movie : MutableLiveData<Resource<SearchResults>> =  _movie
+    val movie: MutableLiveData<Resource<SearchResults>> = _movie
 
     fun getMovie(id: String) {
         job = CoroutineScope(Dispatchers.IO).launch {
 
-            movieRepository.getMovieById(id,"a2dd9d18",1)
+            movieRepository.getMovieById(id, "a2dd9d18", 1)
                 .onStart {
 
                 }.catch {
@@ -34,20 +34,6 @@ class HomeViewModel @Inject constructor(val movieRepository: MovieRepository) :
                 }.collect {
                     _movie.postValue(it)
                 }
-          /*  var temp = movieRepository.api.getMovieById(id, "a2dd9d18", 1)
-            movie.postValue(temp)*/
-
-/*                 coinRepository.getCoinsByParameter(parameter.format())
-            .onStart {
-                _result.value = Result(loading = R.string.loading)
-            }
-            .catch {
-                Log.v("errorGetCoinByParameter", it.message.toString())
-            }
-            .collect {
-                _coinByParameter.value = it
-            }*/
-
 
         }
     }

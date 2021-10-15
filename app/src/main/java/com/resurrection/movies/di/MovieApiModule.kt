@@ -1,6 +1,6 @@
 package com.resurrection.movies.di
 
-import com.resurrection.movies.data.remote.InvioApiService
+import com.resurrection.movies.data.remote.MovieApiService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -23,7 +23,7 @@ object MovieApiModule {
 
     @Provides
     @Singleton
-    fun createApi(retrofit: Retrofit): InvioApiService =
-        retrofit.create(InvioApiService::class.java)
+    fun createApi(retrofit: Retrofit): MovieApiService =
+        retrofit.create(MovieApiService::class.java)
 
 }

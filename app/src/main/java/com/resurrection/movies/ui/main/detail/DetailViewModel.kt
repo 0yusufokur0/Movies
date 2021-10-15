@@ -24,7 +24,7 @@ open class DetailViewModel @Inject constructor(private val movieRepository: Movi
     private var movieDetailJob: Job? = null
     private var saveMovieItemJob: Job? = null
     private var movieFavoriteStateItemJob: Job? = null
-    private var removeMovieJob:Job? = null
+    private var removeMovieJob: Job? = null
     var isFavorite = MutableLiveData<Boolean>()
     private val _movieDetail = MutableLiveData<Resource<MovieDetails>>()
     var movieDetail: MutableLiveData<Resource<MovieDetails>> = _movieDetail
@@ -32,7 +32,7 @@ open class DetailViewModel @Inject constructor(private val movieRepository: Movi
     fun getMovieDetail(id: String) {
         movieDetailJob = CoroutineScope(Dispatchers.IO).launch {
 
-            movieRepository.getMovieDetail(id,"a2dd9d18")
+            movieRepository.getMovieDetail(id, "a2dd9d18")
                 .onStart {
 
                 }.catch {
@@ -40,12 +40,6 @@ open class DetailViewModel @Inject constructor(private val movieRepository: Movi
                 }.collect {
                     _movieDetail.postValue(it)
                 }
-/*
-            val temp = movieRepository.api.getMovieDetail(id, "a2dd9d18")
-*/
-/*
-            movieDetail.postValue(temp)
-*/
         }
     }
 
@@ -59,9 +53,6 @@ open class DetailViewModel @Inject constructor(private val movieRepository: Movi
                 }.collect {
 
                 }
-/*
-            movieRepository.dao.insertMovie(searchItem)
-*/
         }
     }
 
@@ -75,22 +66,16 @@ open class DetailViewModel @Inject constructor(private val movieRepository: Movi
                 }.collect {
                     it.data?.let {
 
-                isFavorite.postValue(true)
-            } ?:run {
-                isFavorite.postValue(false)
-            }
+                        isFavorite.postValue(true)
+                    } ?: run {
+                        isFavorite.postValue(false)
+                    }
                 }
- /*           val temp = movieRepository.dao.getMovieById(id)
-            temp?.let {
-                println(temp.imdbID)
-                isFavorite.postValue(true)
-            } ?:run {
-                isFavorite.postValue(false)
-            }
-*/
+
         }
     }
-    fun removeMovie(searchItem: SearchItem){
+
+    fun removeMovie(searchItem: SearchItem) {
         removeMovieJob = CoroutineScope(Dispatchers.IO).launch {
             movieRepository.removeMovie(searchItem)
                 .onStart {
@@ -100,9 +85,7 @@ open class DetailViewModel @Inject constructor(private val movieRepository: Movi
                 }.collect {
 
                 }
-/*
-            movieRepository.dao.removeMovie(searchItem)
-*/
+
         }
     }
 
