@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.databinding.ViewDataBinding
 import androidx.recyclerview.widget.RecyclerView
 import com.resurrection.movies.data.model.SearchItem
 import com.resurrection.movies.databinding.MovieGridItemBinding
@@ -15,34 +14,27 @@ class HomeAdapter(
     private var searchResults: ArrayList<SearchItem>,
     private var layoutViewType: LayoutViews/* = LayoutViews.GRID_LAYOUT*/,
     private var onClick: (SearchItem) -> Unit
-    ) :
+) :
     RecyclerView.Adapter<HomeAdapter.Holder>() {
-    lateinit var listBinding:MovieRowItemBinding
+    lateinit var listBinding: MovieRowItemBinding
     lateinit var gridItemBinding: MovieGridItemBinding
-     var view: View? = null
+    var view: View? = null
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Holder {
-        var listViewBinding:MovieRowItemBinding = MovieRowItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        var gridViewBinding:MovieGridItemBinding = MovieGridItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        var listViewBinding: MovieRowItemBinding = MovieRowItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        var gridViewBinding: MovieGridItemBinding = MovieGridItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         when (layoutViewType) {
-            LayoutViews.GRID_LAYOUT -> {
-                println(">>>"+layoutViewType)
-                view = gridViewBinding.root }
-            LayoutViews.LIST_LAYOUT -> { view = listViewBinding.root}
+            LayoutViews.GRID_LAYOUT -> { view = gridViewBinding.root }
+            LayoutViews.LIST_LAYOUT -> { view = listViewBinding.root }
         }
-        var holder:Holder = Holder(onClick,view!!,layoutViewType)
-        holder.setBind(listViewBinding,gridViewBinding)
-        println("concreate older"+layoutViewType)
+        var holder: Holder = Holder(onClick, view!!, layoutViewType)
+        holder.setViewDataBinding(listViewBinding, gridViewBinding)
 
         return holder
 
     }
+    override fun onBindViewHolder(holder: Holder, position: Int) { holder.bind(searchResults[position]) }
 
-    fun setLayoutList(){
-        layoutViewType = LayoutViews.LIST_LAYOUT
-        println(layoutViewType)
-        notifyDataSetChanged()
-
-    }
+    override fun getItemCount(): Int { return searchResults.size }
 
 
     class Holder(
@@ -51,22 +43,18 @@ class HomeAdapter(
         private var layoutViewType: LayoutViews/* = LayoutViews.GRID_LAYOUT*/
     ) : RecyclerView.ViewHolder(view) {
 
-        private lateinit var listViewBindingT:MovieRowItemBinding
-        private lateinit var gridViewBindingT:MovieGridItemBinding
-        fun setBind( listViewBinding:MovieRowItemBinding,gridViewBinding:MovieGridItemBinding ) {
+        private lateinit var listViewBindingT: MovieRowItemBinding
+        private lateinit var gridViewBindingT: MovieGridItemBinding
+        fun setViewDataBinding(listViewBinding: MovieRowItemBinding, gridViewBinding: MovieGridItemBinding) {
             listViewBindingT = listViewBinding
             gridViewBindingT = gridViewBinding
-            println("holder setBind"+layoutViewType)
         }
 
         fun bind(searchItem: SearchItem) {
-            println("holder Bind"+layoutViewType)
-
             when (layoutViewType) {
-
                 LayoutViews.GRID_LAYOUT -> gridViewBindingT.searchItem = searchItem
                 LayoutViews.LIST_LAYOUT -> listViewBindingT.searchItem = searchItem
-                }
+            }
 
             itemView.setOnClickListener {
                 itemOnClick(searchItem)
@@ -76,45 +64,6 @@ class HomeAdapter(
 
     }
 
-
-/*    open class MyViewHolder : RecyclerView.ViewHolder {
-        private var headerBinding: MovieGridItemBinding? = null
-        private var regularItemBinding: MovieRowItemBinding? = null
-
-        constructor(binding: MovieGridItemBinding) : super(binding.getRoot()) {
-            headerBinding = binding
-        }
-
-        constructor(binding: MovieRowItemBinding) : super(binding.getRoot()) {
-            regularItemBinding = binding
-        }
-    }*/
-
-
-
-
-
-
-
-
-
-
-
-    override fun onBindViewHolder(holder: Holder, position: Int) {
-        val cryptoMarketModel = searchResults[position]
-        holder.bind(cryptoMarketModel)
-    }
-
-    override fun getItemCount(): Int {
-        return searchResults.size
-    }
-
-/*
-    fun setLayoutGrid(){
-        layoutViewType = LayoutViews.GRID_LAYOUT
-        notifyDataSetChanged()
-    }
-*/
 
 
     @SuppressLint("NotifyDataSetChanged")
@@ -152,7 +101,7 @@ class HomeAdapter(
     }
 
 
-    }
+}
 
 
 
