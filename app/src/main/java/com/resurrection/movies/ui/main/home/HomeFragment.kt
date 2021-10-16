@@ -16,6 +16,7 @@ import com.resurrection.movies.data.model.SearchItem
 import com.resurrection.movies.databinding.ChangeViewDialogBinding
 import com.resurrection.movies.databinding.FragmentHomeBinding
 import com.resurrection.movies.databinding.SortDialogBinding
+
 import com.resurrection.movies.ui.base.BaseFragment
 import com.resurrection.movies.ui.main.detail.DetailFragment
 import com.resurrection.movies.util.LayoutViews
@@ -30,7 +31,7 @@ import dagger.hilt.android.AndroidEntryPoint
 class HomeFragment : BaseFragment<FragmentHomeBinding>() {
 
     val viewModel: HomeViewModel by viewModels()
-    private var searchResultsList: ArrayList<SearchItem> = ArrayList()
+    private var searchResultsList: ArrayList<SearchItem>? = ArrayList()
     private var searchItemDetail: DetailFragment? = null
     private var adapter: HomeAdapter? = null
     private var toast: Toast? = null
@@ -79,7 +80,8 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
 
     private fun setMovie(it: List<SearchItem>?) {
         toast?.cancel()
-        searchResultsList.addAll(it!!)
+        searchResultsList?.clear()
+        searchResultsList?.addAll(it!!)
 
         when (currentLayoutView) {
             LayoutViews.GRID_LAYOUT -> binding.homeRecyclerview.layoutManager =
@@ -88,15 +90,17 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
                 LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
         }
         adapter =
-            HomeAdapter(
-                searchResultsList,
-                currentLayoutView
-            ) { searchItem ->
-                searchItemDetail = DetailFragment()
-                val bundle = Bundle()
-                bundle.putString("movieId", searchItem.imdbID)
-                searchItemDetail!!.arguments = bundle
-                searchItemDetail!!.show(parentFragmentManager, "Bottom Sheet")
+            searchResultsList?.let { it1 ->
+                HomeAdapter(
+                    it1,
+                    currentLayoutView
+                ) { searchItem ->
+                    searchItemDetail = DetailFragment()
+                    val bundle = Bundle()
+                    bundle.putString("movieId", searchItem.imdbID)
+                    searchItemDetail!!.arguments = bundle
+                    searchItemDetail!!.show(parentFragmentManager, "Bottom Sheet")
+                }
             }
         binding.homeRecyclerview.adapter = adapter
         binding.progressBar.visibility = View.GONE
@@ -141,7 +145,8 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
     }
 
     private fun refresh() {
-        if (searchResultsList.isNotEmpty()) {
+
+        if (searchResultsList == null) {
             setMovie(searchResultsList)
             binding.swipeResfresLayout.isRefreshing = false
         } else {

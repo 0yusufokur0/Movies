@@ -27,12 +27,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            app:layout_constraintGuide_percent="0.3" />
+            app:layout_constraintGuide_percent="0.2" />
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/posterImageView"
-            android:layout_width="0dp"
-            android:layout_height="80dp"
+            android:layout_width="80dp"
+            android:layout_height="100dp"
             android:scaleType="centerCrop"
             loadImageFromUrl="@{searchItem.poster}"
             app:layout_constraintEnd_toEndOf="@+id/guideline"
@@ -49,6 +49,7 @@
             android:layout_marginTop="6dp"
             android:textSize="20sp"
             android:textStyle="bold"
+            android:gravity="center"
             android:text="@{searchItem.title}"
             app:layout_constraintStart_toEndOf="@+id/posterImageView"
             app:layout_constraintTop_toTopOf="parent"
@@ -66,15 +67,16 @@
             app:layout_constraintStart_toEndOf="@+id/posterImageView"
             app:layout_constraintTop_toBottomOf="@id/titleTextView"
             tools:text="2014" />
+
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/descriptionTextView"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="6dp"
             android:layout_marginTop="6dp"
+            android:text="@{searchItem.year}"
             android:textSize="14sp"
-            android:text="@{searchItem.type}"
-            app:layout_constraintStart_toEndOf="@+id/yearTextView"
+            app:layout_constraintEnd_toEndOf="@+id/titleTextView"
             app:layout_constraintTop_toBottomOf="@id/titleTextView"
             tools:text="2014" />
 
