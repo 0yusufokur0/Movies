@@ -10,6 +10,8 @@ import com.resurrection.movies.databinding.FragmentFavoriteBinding
 import com.resurrection.movies.ui.base.BaseFragment
 import com.resurrection.movies.ui.main.detail.DetailFragment
 import com.resurrection.movies.ui.main.home.HomeAdapter
+import com.resurrection.movies.util.Status
+import com.resurrection.movies.util.isNetworkAvailable
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -23,24 +25,37 @@ class FavoriteFragment : BaseFragment<FragmentFavoriteBinding>() {
 
     override fun init(savedInstanceState: Bundle?) {
         viewModel.getAllFavoriteMovies()
+        isNetworkAvailable(requireContext())
         setViewModelsObserve()
         binding.swipeResfresLayout.setOnRefreshListener { viewModel.getAllFavoriteMovies() }
     }
 
     private fun setViewModelsObserve() {
         viewModel.movies.observe(viewLifecycleOwner, { it ->
-            binding.favoriteRecyclerview.layoutManager = GridLayoutManager(requireContext(), 2)
+            when (it.status) {
+                Status.SUCCESS -> {
+                    it.data?.let {
+                        binding.favoriteRecyclerview.layoutManager =
+                            GridLayoutManager(requireContext(), 2)
 
-            adapter = HomeAdapter(it as ArrayList<SearchItem>) {
-                searchItemDetail = DetailFragment()
-                val bundle = Bundle()
-                bundle.putString("movieId", it.imdbID)
-                searchItemDetail!!.arguments = bundle
-                searchItemDetail!!.show(parentFragmentManager, "Bottom Sheet")
+                        adapter = HomeAdapter(it as ArrayList<SearchItem>) {
+                            searchItemDetail = DetailFragment()
+                            val bundle = Bundle()
+                            bundle.putString("movieId", it.imdbID)
+                            searchItemDetail!!.arguments = bundle
+                            searchItemDetail!!.show(parentFragmentManager, "Bottom Sheet")
+                        }
+                        binding.favoriteRecyclerview.adapter = adapter
+                        binding.progressBar.visibility = View.GONE
+                    }
+                }
+                Status.LOADING -> binding.progressBar.visibility = View.VISIBLE
+                Status.ERROR -> {
+                    binding.progressBar.visibility = View.GONE
+                }
             }
-            binding.favoriteRecyclerview.adapter = adapter
-            binding.progressBar.visibility = View.GONE
             binding.swipeResfresLayout.isRefreshing = false
+
         })
     }
 

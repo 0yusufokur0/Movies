@@ -1,6 +1,5 @@
 package com.resurrection.movies.ui.main.home
 
-import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
@@ -15,6 +14,7 @@ import com.resurrection.movies.data.model.SearchItem
 import com.resurrection.movies.databinding.FragmentHomeBinding
 import com.resurrection.movies.ui.base.BaseFragment
 import com.resurrection.movies.ui.main.detail.DetailFragment
+import com.resurrection.movies.util.isNetworkAvailable
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -30,10 +30,10 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
         return R.layout.fragment_home
     }
 
-    @SuppressLint("ShowToast")
     override fun init(savedInstanceState: Bundle?) {
         viewModel.getMovie("Turkey")
         setViewModelsObserve()
+
         binding.swipeResfresLayout.setOnRefreshListener {
             if (searchString.isNotEmpty()){
                 viewModel.getMovie(searchString)
@@ -68,7 +68,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
 
                 binding.homeRecyclerview.adapter = HomeAdapter(ArrayList()) {}
                 binding.progressBar.visibility = View.GONE
-                toast = Toast.makeText(requireContext(), "no found result", Toast.LENGTH_SHORT)
+                isNetworkAvailable(requireContext())
                 toast?.show()
             }
             binding.swipeResfresLayout.isRefreshing = false

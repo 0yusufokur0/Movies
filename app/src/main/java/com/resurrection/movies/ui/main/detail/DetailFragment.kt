@@ -11,6 +11,8 @@ import com.resurrection.movies.data.model.MovieDetails
 import com.resurrection.movies.data.model.SearchItem
 import com.resurrection.movies.databinding.FragmentDetailBinding
 import com.resurrection.movies.ui.base.BaseBottomSheetFragment
+import com.resurrection.movies.util.Status
+import com.resurrection.movies.util.isNetworkAvailable
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -27,6 +29,8 @@ class DetailFragment : BaseBottomSheetFragment<FragmentDetailBinding>() {
     }
 
     override fun init(savedInstanceState: Bundle?) {
+        setViewModelsObserve()
+        isNetworkAvailable(requireContext())
         binding.favoriteImageView.changeIconColor(false)
         val data = arguments?.getString("movieId")
 
@@ -35,31 +39,44 @@ class DetailFragment : BaseBottomSheetFragment<FragmentDetailBinding>() {
             viewModel.getMovieFavoriteState(data)
         }
 
-        binding.favoriteImageView.setOnClickListener {
-            val movieDetail: MovieDetails = binding.movieDetail as MovieDetails
-            val currentSearchItem =
-                SearchItem(
-                    movieDetail.imdbID,
-                    movieDetail.type,
-                    movieDetail.year,
-                    movieDetail.poster,
-                    movieDetail.title
-                )
+        binding.favoriteImageView.setOnClickListener { setFavoriteAction() }
 
-            if (favoriteState) {
-                viewModel.removeMovie(currentSearchItem)
-                binding.favoriteImageView.changeIconColor(false)
-                favoriteState = false
-            } else {
-                binding.favoriteImageView.changeIconColor(true)
-                binding.movieDetail as MovieDetails
-                viewModel.saveMovie(currentSearchItem)
-                favoriteState = true
-            }
+    }
+    private fun setFavoriteAction(){
+        val movieDetail: MovieDetails = binding.movieDetail as MovieDetails
+        val currentSearchItem =
+            SearchItem(
+                movieDetail.imdbID,
+                movieDetail.type,
+                movieDetail.year,
+                movieDetail.poster,
+                movieDetail.title
+            )
 
+        if (favoriteState) {
+            viewModel.removeMovie(currentSearchItem)
+            binding.favoriteImageView.changeIconColor(false)
+            favoriteState = false
+        } else {
+            binding.favoriteImageView.changeIconColor(true)
+            binding.movieDetail as MovieDetails
+            viewModel.saveMovie(currentSearchItem)
+            favoriteState = true
         }
+    }
 
-        viewModel.movieDetail.observe(viewLifecycleOwner, { binding.movieDetail = it.data!! })
+    private fun setViewModelsObserve(){
+        viewModel.movieDetail.observe(viewLifecycleOwner, {
+            when(it.status){
+                Status.SUCCESS -> {
+                    it.data?.let {
+                        binding.movieDetail = it
+                    }
+                }
+                Status.LOADING -> {}
+                Status.ERROR -> {}
+            }
+        })
         viewModel.isFavorite.observe(viewLifecycleOwner, {
             favoriteState = it
             binding.favoriteImageView.changeIconColor(favoriteState)

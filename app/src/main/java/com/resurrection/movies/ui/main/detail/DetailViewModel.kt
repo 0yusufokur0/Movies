@@ -1,18 +1,22 @@
 package com.resurrection.movies.ui.main.detail
 
+import android.widget.Toast
 import androidx.lifecycle.MutableLiveData
+import com.resurrection.movies.R
 
 import com.resurrection.movies.data.model.MovieDetails
 import com.resurrection.movies.data.model.SearchItem
 import com.resurrection.movies.data.repository.MovieRepository
 import com.resurrection.movies.ui.base.BaseViewModel
 import com.resurrection.movies.util.Resource
+import com.resurrection.movies.util.Result
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.coroutineContext
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -47,7 +51,9 @@ open class DetailViewModel @Inject constructor(private val movieRepository: Movi
         saveMovieItemJob = CoroutineScope(Dispatchers.IO).launch {
             movieRepository.insertMovie(searchItem)
                 .onStart {
-
+/*
+                    _result.value = Result(loading = R.string.loading)
+*/
                 }.catch {
 
                 }.collect {
@@ -60,18 +66,16 @@ open class DetailViewModel @Inject constructor(private val movieRepository: Movi
         movieFavoriteStateItemJob = CoroutineScope(Dispatchers.IO).launch {
             movieRepository.getMovieById(id)
                 .onStart {
-
+                    // Loading
                 }.catch {
 
                 }.collect {
                     it.data?.let {
-
                         isFavorite.postValue(true)
                     } ?: run {
                         isFavorite.postValue(false)
                     }
                 }
-
         }
     }
 
