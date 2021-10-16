@@ -17,17 +17,15 @@ class MovieRepositoryImpl @Inject constructor(
 ) : MovieRepository {
     override suspend fun getMovieById(
         id: String,
-        apiKey: String,
         page: Int
     ): Flow<Resource<SearchResults>> = flow {
-        emit(getResourceByNetworkRequest { movieApiService.getMovieById(id, apiKey, page) })
+        emit(getResourceByNetworkRequest { movieApiService.getMovieById(id, page) })
     }
 
     override suspend fun getMovieDetail(
         imdbId: String,
-        apiKey: String
     ): Flow<Resource<MovieDetails>> = flow {
-        emit(getResourceByNetworkRequest { movieApiService.getMovieDetail(imdbId, apiKey) })
+        emit(getResourceByNetworkRequest { movieApiService.getMovieDetail(imdbId) })
     }
 
     override suspend fun getMovieById(imdbID: String): Flow<Resource<SearchItem>> = flow {

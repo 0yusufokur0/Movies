@@ -87,6 +87,12 @@ class DetailFragment : BaseBottomSheetFragment<FragmentDetailBinding>() {
                 ERROR -> toast(requireContext(), "could not be added to favorites")
             }
         })
+        viewModel.isRemoved.observe(viewLifecycleOwner,{
+            when(it.status){
+                SUCCESS -> toast(requireContext(), "removed favorite")
+                ERROR -> toast(requireContext(), "could not be removed")
+            }
+        })
     }
 
     private infix fun ImageView.changeIconColor(isFavourite: Boolean) {

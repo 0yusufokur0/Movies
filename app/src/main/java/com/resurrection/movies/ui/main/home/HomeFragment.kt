@@ -36,12 +36,15 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
     override fun init(savedInstanceState: Bundle?) {
         viewModel.getMovie("Turkey")
         setViewModelsObserve()
+        toast = toast(requireContext(), "movie not found")
+        toast?.cancel()
 
         binding.swipeResfresLayout.setOnRefreshListener {
             if (searchString.isNotEmpty()) {
                 viewModel.getMovie(searchString)
             } else {
                 viewModel.getMovie("Turkey")
+                toast?.cancel()
             }
         }
     }
@@ -70,22 +73,18 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
                             binding.homeRecyclerview.adapter = adapter
                             binding.progressBar.visibility = View.GONE
                             toast(requireContext(), "updated")
+                        } ?: run {
+                            toast?.show()
+                            binding.homeRecyclerview.adapter = HomeAdapter(ArrayList()) {}
+                            binding.progressBar.visibility = View.GONE
+                            isNetworkAvailable(requireContext())
                         }
 
-                    } ?: run {
-                        toast = toast(requireContext(), "movie not found")
-                        toast?.show()
-                        binding.homeRecyclerview.adapter = HomeAdapter(ArrayList()) {}
-                        binding.progressBar.visibility = View.GONE
-                        isNetworkAvailable(requireContext())
                     }
                     binding.swipeResfresLayout.isRefreshing = false
                 }
                 ERROR -> toast(requireContext(), "could not be load")
-
-
             }
-
         })
     }
 

@@ -17,12 +17,12 @@ object MovieDaoModule {
 
     @Provides
     @Singleton
-    fun invioDatabase(@ApplicationContext context: Context): MovieDatabase =
+    fun movieDatabase(@ApplicationContext context: Context): MovieDatabase =
         Room.databaseBuilder(context, MovieDatabase::class.java, "crypto").build()
 
     @Provides
     @Singleton
-    fun invioDao(cryptoDatabase: MovieDatabase): MovieDao =
-        cryptoDatabase.movieDao()
+    fun movieDao(movieDatabase: MovieDatabase): MovieDao =
+        movieDatabase.movieDao()
 }
 

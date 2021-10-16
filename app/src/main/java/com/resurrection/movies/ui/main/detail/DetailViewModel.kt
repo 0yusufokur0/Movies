@@ -38,7 +38,7 @@ open class DetailViewModel @Inject constructor(private val movieRepository: Movi
 
     fun getMovieDetail(id: String) {
         movieDetailJob = CoroutineScope(Dispatchers.IO).launch {
-            movieRepository.getMovieDetail(id, "a2dd9d18")
+            movieRepository.getMovieDetail(id)
                 .onStart { _movieDetail.postValue(Resource.Loading()) }
                 .catch { message -> _movieDetail.postValue(Resource.Error(message)) }
                 .collect { _movieDetail.postValue(Resource.Success(it.data)) }

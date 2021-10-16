@@ -26,7 +26,7 @@ class HomeViewModel @Inject constructor(val movieRepository: MovieRepository) :
     fun getMovie(id: String) {
         job = CoroutineScope(Dispatchers.IO).launch {
 
-            movieRepository.getMovieById(id, "a2dd9d18", 1)
+            movieRepository.getMovieById(id, 1)
                 .onStart { _movie.postValue(Resource.Loading()) }
                 .catch { message -> _movie.postValue(Resource.Error(message)) }
                 .collect { _movie.postValue(it) }
