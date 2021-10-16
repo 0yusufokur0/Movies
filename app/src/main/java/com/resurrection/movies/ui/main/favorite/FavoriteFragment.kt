@@ -10,6 +10,7 @@ import com.resurrection.movies.databinding.FragmentFavoriteBinding
 import com.resurrection.movies.ui.base.BaseFragment
 import com.resurrection.movies.ui.main.detail.DetailFragment
 import com.resurrection.movies.ui.main.home.HomeAdapter
+import com.resurrection.movies.util.LayoutViews
 import com.resurrection.movies.util.Status.*
 import com.resurrection.movies.util.isNetworkAvailable
 import com.resurrection.movies.util.toast
@@ -39,7 +40,7 @@ class FavoriteFragment : BaseFragment<FragmentFavoriteBinding>() {
                         binding.favoriteRecyclerview.layoutManager =
                             GridLayoutManager(requireContext(), 2)
 
-                        adapter = HomeAdapter(it as ArrayList<SearchItem>) {
+                        adapter = HomeAdapter(it as ArrayList<SearchItem>,LayoutViews.GRID_LAYOUT) {
                             searchItemDetail = DetailFragment()
                             val bundle = Bundle()
                             bundle.putString("movieId", it.imdbID)

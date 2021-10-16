@@ -5,16 +5,19 @@ import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.*
+import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.resurrection.movies.R
 import com.resurrection.movies.data.model.SearchItem
 import com.resurrection.movies.databinding.FragmentHomeBinding
 import com.resurrection.movies.databinding.SortDialogBinding
 import com.resurrection.movies.ui.base.BaseFragment
 import com.resurrection.movies.ui.main.detail.DetailFragment
+import com.resurrection.movies.util.LayoutViews
 import com.resurrection.movies.util.Status.ERROR
 import com.resurrection.movies.util.Status.SUCCESS
 import com.resurrection.movies.util.isNetworkAvailable
@@ -60,7 +63,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
                                 GridLayoutManager(requireContext(), 2)
 
                             adapter =
-                                HomeAdapter(searchList as ArrayList<SearchItem>) { searchItem ->
+                                HomeAdapter(searchResultsList as ArrayList<SearchItem>,LayoutViews.GRID_LAYOUT) { searchItem ->
                                     searchItemDetail = DetailFragment()
                                     val bundle = Bundle()
                                     bundle.putString("movieId", searchItem.imdbID)
@@ -72,7 +75,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
                             toast(requireContext(), "updated")
                         } ?: run {
                             toast?.show()
-                            binding.homeRecyclerview.adapter = HomeAdapter(ArrayList()) {}
+                            binding.homeRecyclerview.adapter = HomeAdapter(ArrayList(),LayoutViews.GRID_LAYOUT) {}
                             binding.progressBar.visibility = View.GONE
                             isNetworkAvailable(requireContext())
                         }
@@ -142,6 +145,24 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.action_sort -> alertDialog?.show()
+            R.id.action_change_layout -> {
+                println("----------------------------------------_")
+                binding.homeRecyclerview.adapter = null
+                binding.homeRecyclerview.layoutManager =
+                    LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
+
+                binding.homeRecyclerview.adapter =
+                    HomeAdapter(searchResultsList as ArrayList<SearchItem>,LayoutViews.LIST_LAYOUT) { searchItem ->
+                        searchItemDetail = DetailFragment()
+                        val bundle = Bundle()
+                        bundle.putString("movieId", searchItem.imdbID)
+                        searchItemDetail!!.arguments = bundle
+                        searchItemDetail!!.show(parentFragmentManager, "Bottom Sheet")
+                    }
+                adapter?.setLayoutList()
+
+            }
+
         }
         return super.onOptionsItemSelected(item)
 
