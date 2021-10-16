@@ -100,7 +100,9 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
             }
         binding.homeRecyclerview.adapter = adapter
         binding.progressBar.visibility = View.GONE
-        toast(requireContext(), "updated")
+        if (isNetworkAvailable(requireContext())){
+            toast(requireContext(), "updated")
+        }
     }
 
     private fun setSortAlertDialog(): AlertDialog? {
@@ -141,11 +143,13 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
     private fun refresh() {
         if (searchResultsList.isNotEmpty()) {
             setMovie(searchResultsList)
+            binding.swipeResfresLayout.isRefreshing = false
         } else {
             if (searchString.isNotEmpty()) {
                 viewModel.getMovie(searchString)
             } else {
                 viewModel.getMovie("Turkey")
+                binding.swipeResfresLayout.isRefreshing = false
                 toast?.cancel()
             }
         }
