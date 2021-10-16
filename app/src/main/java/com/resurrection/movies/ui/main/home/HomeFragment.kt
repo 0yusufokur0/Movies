@@ -44,8 +44,18 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
 
 
     override fun init(savedInstanceState: Bundle?) {
+        setAlertDialogs()
+        setViewModelsObserve()
+        viewModel.getMovie("Turkey")
+        toast = toast(requireContext(), "movie not found")
+        toast?.cancel()
+
+        binding.swipeResfresLayout.setOnRefreshListener { refresh() }
+    }
+
+    fun setAlertDialogs(){
         sortAlertDialog = (requireActivity() as MainActivity).setSortAlertDialog(
-            this::refresh,
+            { refresh() },
             { adapter?.sortAToZ() },
             { adapter?.sortZToA() },
             { adapter?.sortOldToNew() },
@@ -63,18 +73,9 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
 
         (requireActivity() as MainActivity).getAlertDialogs(sortAlertDialog, changeLayoutAlertDialog)
 
-
-
-
-        setViewModelsObserve()
-        viewModel.getMovie("Turkey")
-        toast = toast(requireContext(), "movie not found")
-        toast?.cancel()
-
-        binding.swipeResfresLayout.setOnRefreshListener { refresh() }
     }
 
-    fun setViewModelsObserve() {
+    private fun setViewModelsObserve() {
         viewModel.movie.observe(viewLifecycleOwner, Observer {
             when (it?.status) {
                 SUCCESS -> {
@@ -129,41 +130,6 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
         }
     }
 
-/*    private fun setSortAlertDialog(): AlertDialog? {
-        val dialogBuilder = AlertDialog.Builder(requireContext())
-        val alertBinding: SortDialogBinding =
-            SortDialogBinding.inflate(LayoutInflater.from(context))
-        dialogBuilder.setView(alertBinding.root)
-
-        val alertDialog = dialogBuilder.create()
-        alertDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-        alertBinding.recommended.setOnClickListener { refresh() }
-        alertBinding.sortAToZ.setOnClickListener { adapter?.sortAToZ() }
-        alertBinding.sortZtoA.setOnClickListener { adapter?.sortZToA() }
-        alertBinding.sortOldToNew.setOnClickListener { adapter?.sortOldToNew() }
-        alertBinding.sortNewToOld.setOnClickListener { adapter?.sortNewToOld() }
-        return alertDialog
-    }
-
-    private fun setRecyclerViewLayoutAlertDialog(): AlertDialog? {
-        val dialogBuilder = AlertDialog.Builder(requireContext())
-        val alertBinding: ChangeViewDialogBinding =
-            ChangeViewDialogBinding.inflate(LayoutInflater.from(context))
-        dialogBuilder.setView(alertBinding.root)
-
-        val alertDialog = dialogBuilder.create()
-        alertDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-        alertBinding.gridViewLayout.setOnClickListener {
-            currentLayoutView = LayoutViews.GRID_LAYOUT
-            refresh()
-        }
-        alertBinding.listViewLaout.setOnClickListener {
-            currentLayoutView = LayoutViews.LIST_LAYOUT
-            refresh()
-        }
-        return alertDialog
-    }*/
-
     private fun refresh() {
 
         if (searchResultsList == null) {
@@ -185,7 +151,6 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
         super.onViewCreated(view, savedInstanceState)
         setHasOptionsMenu(true)
     }
-
 
     override fun onPrepareOptionsMenu(menu: Menu) {
         val mSearchMenuItem = menu.findItem(R.id.action_search)

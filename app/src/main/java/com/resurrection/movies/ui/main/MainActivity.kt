@@ -42,6 +42,11 @@ class MainActivity : BaseActivity<ActivityMainBinding>(){
         binding.navView.setupWithNavController(navController)
     }
 
+    fun getAlertDialogs(mSortAlertDialog: AlertDialog?,mChangeLayoutAlertDialog:AlertDialog?) {
+        sortAlertDialog = mSortAlertDialog
+        changeLayoutAlertDialog = mChangeLayoutAlertDialog
+    }
+
     open fun setSortAlertDialog(recommended:()-> Unit,sortAToZ:()-> Unit, sortZToA:()-> Unit,sortOldToNew:()-> Unit,sortNewToOld:()-> Unit): AlertDialog? {
         val dialogBuilder = AlertDialog.Builder(this)
         val alertBinding: SortDialogBinding =
@@ -91,9 +96,6 @@ class MainActivity : BaseActivity<ActivityMainBinding>(){
 
     }
 
-     fun getAlertDialogs(mSortAlertDialog: AlertDialog?,mChangeLayoutAlertDialog:AlertDialog?) {
-        sortAlertDialog = mSortAlertDialog
-         changeLayoutAlertDialog = mChangeLayoutAlertDialog
-    }
+
 
 }

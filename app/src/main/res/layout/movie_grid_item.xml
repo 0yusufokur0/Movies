@@ -8,6 +8,13 @@
             name="searchItem"
             type="com.resurrection.movies.data.model.SearchItem" />
     </data>
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="6dp"
+        app:cardCornerRadius="12dp"
+        android:elevation="0dp"
+        app:cardBackgroundColor="?attr/movieItemBg">
 
     <FrameLayout
         android:layout_width="wrap_content"
@@ -21,8 +28,6 @@
             android:layout_marginTop="5dp"
             android:layout_marginRight="10dp"
             android:layout_marginBottom="5dp"
-            android:background="@drawable/movie_item_bg"
-            android:backgroundTint="?attr/movieItemBg"
             android:orientation="vertical"
             android:padding="16dp"
             android:weightSum="100"
@@ -79,5 +84,6 @@
         </LinearLayout>
 
     </FrameLayout>
+    </com.google.android.material.card.MaterialCardView>
 
 </layout>
