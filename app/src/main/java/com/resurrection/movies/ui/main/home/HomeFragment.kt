@@ -1,10 +1,11 @@
 package com.resurrection.movies.ui.main.home
 
 import android.app.AlertDialog
-import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
-import android.view.*
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
+import android.view.View
 import android.widget.Toast
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.viewModels
@@ -13,11 +14,9 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.resurrection.movies.R
 import com.resurrection.movies.data.model.SearchItem
-import com.resurrection.movies.databinding.ChangeViewDialogBinding
 import com.resurrection.movies.databinding.FragmentHomeBinding
-import com.resurrection.movies.databinding.SortDialogBinding
-
 import com.resurrection.movies.ui.base.BaseFragment
+import com.resurrection.movies.ui.main.MainActivity
 import com.resurrection.movies.ui.main.detail.DetailFragment
 import com.resurrection.movies.util.LayoutViews
 import com.resurrection.movies.util.Status.ERROR
@@ -37,15 +36,36 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
     private var toast: Toast? = null
     private var searchString = ""
     private var sortAlertDialog: AlertDialog? = null
-    private var changeLayoutAlertDialog: AlertDialog? = null
-    private var currentLayoutView: LayoutViews = LayoutViews.GRID_LAYOUT
+    var changeLayoutAlertDialog: AlertDialog? = null
+    var currentLayoutView: LayoutViews = LayoutViews.GRID_LAYOUT
     override fun getLayoutRes(): Int {
         return R.layout.fragment_home
     }
 
+
     override fun init(savedInstanceState: Bundle?) {
-        sortAlertDialog = setSortAlertDialog()
-        changeLayoutAlertDialog = setRecyclerViewLayoutAlertDialog()
+        sortAlertDialog = (requireActivity() as MainActivity).setSortAlertDialog(
+            this::refresh,
+            { adapter?.sortAToZ() },
+            { adapter?.sortZToA() },
+            { adapter?.sortOldToNew() },
+            { adapter?.sortOldToNew() })
+        changeLayoutAlertDialog = (requireActivity() as MainActivity)
+            .setRecyclerViewLayoutAlertDialog(
+                {
+                    currentLayoutView = LayoutViews.GRID_LAYOUT
+                    refresh()
+                },
+                {
+                    currentLayoutView = LayoutViews.LIST_LAYOUT
+                    refresh()
+                })
+
+        (requireActivity() as MainActivity).getAlertDialogs(sortAlertDialog, changeLayoutAlertDialog)
+
+
+
+
         setViewModelsObserve()
         viewModel.getMovie("Turkey")
         toast = toast(requireContext(), "movie not found")
@@ -54,7 +74,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
         binding.swipeResfresLayout.setOnRefreshListener { refresh() }
     }
 
-    private fun setViewModelsObserve() {
+    fun setViewModelsObserve() {
         viewModel.movie.observe(viewLifecycleOwner, Observer {
             when (it?.status) {
                 SUCCESS -> {
@@ -104,12 +124,12 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
             }
         binding.homeRecyclerview.adapter = adapter
         binding.progressBar.visibility = View.GONE
-        if (isNetworkAvailable(requireContext())){
+        if (isNetworkAvailable(requireContext())) {
             toast(requireContext(), "updated")
         }
     }
 
-    private fun setSortAlertDialog(): AlertDialog? {
+/*    private fun setSortAlertDialog(): AlertDialog? {
         val dialogBuilder = AlertDialog.Builder(requireContext())
         val alertBinding: SortDialogBinding =
             SortDialogBinding.inflate(LayoutInflater.from(context))
@@ -142,7 +162,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
             refresh()
         }
         return alertDialog
-    }
+    }*/
 
     private fun refresh() {
 
@@ -192,18 +212,6 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
                 return false
             }
         })
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.action_sort -> sortAlertDialog?.show()
-            R.id.action_change_layout -> {
-                changeLayoutAlertDialog?.show()
-            }
-
-        }
-        return super.onOptionsItemSelected(item)
-
     }
 
 
