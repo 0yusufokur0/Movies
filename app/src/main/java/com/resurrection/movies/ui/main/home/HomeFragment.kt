@@ -14,7 +14,10 @@ import com.resurrection.movies.data.model.SearchItem
 import com.resurrection.movies.databinding.FragmentHomeBinding
 import com.resurrection.movies.ui.base.BaseFragment
 import com.resurrection.movies.ui.main.detail.DetailFragment
+import com.resurrection.movies.util.Status.ERROR
+import com.resurrection.movies.util.Status.SUCCESS
 import com.resurrection.movies.util.isNetworkAvailable
+import com.resurrection.movies.util.toast
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -35,43 +38,54 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
         setViewModelsObserve()
 
         binding.swipeResfresLayout.setOnRefreshListener {
-            if (searchString.isNotEmpty()){
+            if (searchString.isNotEmpty()) {
                 viewModel.getMovie(searchString)
-            }else{
+            } else {
                 viewModel.getMovie("Turkey")
             }
         }
     }
 
-    private fun setViewModelsObserve(){
-        viewModel.movie.observe(this, { searchResults ->
-            binding.progressBar.visibility = View.VISIBLE
-            searchResults?.let { searchResult ->
-                searchResult.data?.search?.let { searchList ->
-                    toast?.cancel()
-                    searchResultsList.addAll(searchList)
+    private fun setViewModelsObserve() {
+        viewModel.movie.observe(this, {
+            when (it.status) {
+                SUCCESS -> {
+                    binding.progressBar.visibility = View.VISIBLE
+                    it?.let { searchResult ->
+                        searchResult.data?.search?.let { searchList ->
+                            toast?.cancel()
+                            searchResultsList.addAll(searchList)
 
-                    binding.homeRecyclerview.layoutManager = GridLayoutManager(requireContext(), 2)
+                            binding.homeRecyclerview.layoutManager =
+                                GridLayoutManager(requireContext(), 2)
 
-                    adapter = HomeAdapter(searchList as ArrayList<SearchItem>) { searchItem ->
-                        searchItemDetail = DetailFragment()
-                        val bundle = Bundle()
-                        bundle.putString("movieId", searchItem.imdbID)
-                        searchItemDetail!!.arguments = bundle
-                        searchItemDetail!!.show(parentFragmentManager, "Bottom Sheet")
+                            adapter =
+                                HomeAdapter(searchList as ArrayList<SearchItem>) { searchItem ->
+                                    searchItemDetail = DetailFragment()
+                                    val bundle = Bundle()
+                                    bundle.putString("movieId", searchItem.imdbID)
+                                    searchItemDetail!!.arguments = bundle
+                                    searchItemDetail!!.show(parentFragmentManager, "Bottom Sheet")
+                                }
+                            binding.homeRecyclerview.adapter = adapter
+                            binding.progressBar.visibility = View.GONE
+                            toast(requireContext(), "updated")
+                        }
+
+                    } ?: run {
+                        toast = toast(requireContext(), "movie not found")
+                        toast?.show()
+                        binding.homeRecyclerview.adapter = HomeAdapter(ArrayList()) {}
+                        binding.progressBar.visibility = View.GONE
+                        isNetworkAvailable(requireContext())
                     }
-                    binding.homeRecyclerview.adapter = adapter
-                    binding.progressBar.visibility = View.GONE
+                    binding.swipeResfresLayout.isRefreshing = false
                 }
+                ERROR -> toast(requireContext(), "could not be load")
 
-            } ?: run {
 
-                binding.homeRecyclerview.adapter = HomeAdapter(ArrayList()) {}
-                binding.progressBar.visibility = View.GONE
-                isNetworkAvailable(requireContext())
-                toast?.show()
             }
-            binding.swipeResfresLayout.isRefreshing = false
+
         })
     }
 

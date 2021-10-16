@@ -1,22 +1,19 @@
 package com.resurrection.movies.ui.main.detail
 
-import android.widget.Toast
 import androidx.lifecycle.MutableLiveData
-import com.resurrection.movies.R
 
 import com.resurrection.movies.data.model.MovieDetails
 import com.resurrection.movies.data.model.SearchItem
 import com.resurrection.movies.data.repository.MovieRepository
 import com.resurrection.movies.ui.base.BaseViewModel
 import com.resurrection.movies.util.Resource
-import com.resurrection.movies.util.Result
+import com.resurrection.movies.util.Status
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.coroutineContext
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -26,55 +23,45 @@ open class DetailViewModel @Inject constructor(private val movieRepository: Movi
     BaseViewModel() {
 
     private var movieDetailJob: Job? = null
-    private var saveMovieItemJob: Job? = null
+    private var insertMovieItemJob: Job? = null
     private var movieFavoriteStateItemJob: Job? = null
     private var removeMovieJob: Job? = null
-    var isFavorite = MutableLiveData<Boolean>()
+    private var _isFavorite = MutableLiveData<Resource<Boolean>>()
     private val _movieDetail = MutableLiveData<Resource<MovieDetails>>()
-    var movieDetail: MutableLiveData<Resource<MovieDetails>> = _movieDetail
+    private val _insertMovie = MutableLiveData<Resource<Status>>()
+    private val _isRemoved = MutableLiveData<Resource<Boolean>>()
+    val insertMovie: MutableLiveData<Resource<Status>> = _insertMovie
+    val isRemoved: MutableLiveData<Resource<Boolean>> = _isRemoved
+    val movieDetail: MutableLiveData<Resource<MovieDetails>> = _movieDetail
+    val isFavorite: MutableLiveData<Resource<Boolean>> = _isFavorite
+
 
     fun getMovieDetail(id: String) {
         movieDetailJob = CoroutineScope(Dispatchers.IO).launch {
-
             movieRepository.getMovieDetail(id, "a2dd9d18")
-                .onStart {
-
-                }.catch {
-
-                }.collect {
-                    _movieDetail.postValue(it)
-                }
+                .onStart { _movieDetail.postValue(Resource.Loading()) }
+                .catch { message -> _movieDetail.postValue(Resource.Error(message)) }
+                .collect { _movieDetail.postValue(Resource.Success(it.data)) }
         }
     }
 
-    fun saveMovie(searchItem: SearchItem) {
-        saveMovieItemJob = CoroutineScope(Dispatchers.IO).launch {
+    fun insertMovie(searchItem: SearchItem) {
+        insertMovieItemJob = CoroutineScope(Dispatchers.IO).launch {
             movieRepository.insertMovie(searchItem)
-                .onStart {
-/*
-                    _result.value = Result(loading = R.string.loading)
-*/
-                }.catch {
-
-                }.collect {
-
-                }
+                .onStart { _insertMovie.postValue(Resource.Loading()) }
+                .catch { message -> _insertMovie.postValue(Resource.Error(message)) }
+                .collect { _insertMovie.postValue(Resource.Success(null)) }
         }
     }
 
     fun getMovieFavoriteState(id: String) {
         movieFavoriteStateItemJob = CoroutineScope(Dispatchers.IO).launch {
             movieRepository.getMovieById(id)
-                .onStart {
-                    // Loading
-                }.catch {
-
-                }.collect {
-                    it.data?.let {
-                        isFavorite.postValue(true)
-                    } ?: run {
-                        isFavorite.postValue(false)
-                    }
+                .onStart { _isFavorite.postValue(Resource.Loading()) }
+                .catch { message -> _isFavorite.postValue(Resource.Error(message)) }
+                .collect {
+                    it.data?.let { _isFavorite.postValue(Resource.Success(true)) }
+                        ?: run { _isFavorite.postValue(Resource.Success(false)) }
                 }
         }
     }
@@ -82,14 +69,12 @@ open class DetailViewModel @Inject constructor(private val movieRepository: Movi
     fun removeMovie(searchItem: SearchItem) {
         removeMovieJob = CoroutineScope(Dispatchers.IO).launch {
             movieRepository.removeMovie(searchItem)
-                .onStart {
-
-                }.catch {
-
-                }.collect {
-
+                .onStart { _isRemoved.postValue(Resource.Loading()) }
+                .catch { message -> _isRemoved.postValue(Resource.Error(message)) }
+                .collect {
+                    it.data?.let { _isRemoved.postValue(Resource.Success(true)) }
+                        ?: run { _isRemoved.postValue(Resource.Success(false)) }
                 }
-
         }
     }
 

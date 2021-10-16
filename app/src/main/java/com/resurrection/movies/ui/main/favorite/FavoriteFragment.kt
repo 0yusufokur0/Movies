@@ -10,8 +10,9 @@ import com.resurrection.movies.databinding.FragmentFavoriteBinding
 import com.resurrection.movies.ui.base.BaseFragment
 import com.resurrection.movies.ui.main.detail.DetailFragment
 import com.resurrection.movies.ui.main.home.HomeAdapter
-import com.resurrection.movies.util.Status
+import com.resurrection.movies.util.Status.*
 import com.resurrection.movies.util.isNetworkAvailable
+import com.resurrection.movies.util.toast
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -33,7 +34,7 @@ class FavoriteFragment : BaseFragment<FragmentFavoriteBinding>() {
     private fun setViewModelsObserve() {
         viewModel.movies.observe(viewLifecycleOwner, { it ->
             when (it.status) {
-                Status.SUCCESS -> {
+                SUCCESS -> {
                     it.data?.let {
                         binding.favoriteRecyclerview.layoutManager =
                             GridLayoutManager(requireContext(), 2)
@@ -47,15 +48,13 @@ class FavoriteFragment : BaseFragment<FragmentFavoriteBinding>() {
                         }
                         binding.favoriteRecyclerview.adapter = adapter
                         binding.progressBar.visibility = View.GONE
+                        toast(requireContext(), "updated")
                     }
                 }
-                Status.LOADING -> binding.progressBar.visibility = View.VISIBLE
-                Status.ERROR -> {
-                    binding.progressBar.visibility = View.GONE
-                }
+                LOADING -> binding.progressBar.visibility = View.VISIBLE
+                ERROR -> binding.progressBar.visibility = View.GONE
             }
             binding.swipeResfresLayout.isRefreshing = false
-
         })
     }
 

@@ -19,21 +19,15 @@ import javax.inject.Inject
 class FavoriteViewModel @Inject constructor(private val movieRepository: MovieRepository) :
     BaseViewModel() {
     private var job: Job? = null
-    var movies = MutableLiveData<Resource<List<SearchItem>>>()
+    private val _movies = MutableLiveData<Resource<List<SearchItem>>>()
+    val movies: MutableLiveData<Resource<List<SearchItem>>> = _movies
 
     fun getAllFavoriteMovies() {
         job = CoroutineScope(Dispatchers.IO).launch {
             movieRepository.getFavoriteMovies()
-                .onStart {
-
-                }.catch {
-
-                }.collect {
-                    it.let {
-                        movies.postValue(it)
-                    }
-                }
-
+                .onStart { _movies.postValue(Resource.Loading()) }
+                .catch { message -> _movies.postValue(Resource.Error(message)) }
+                .collect { it.let { _movies.postValue(it) } }
         }
     }
 

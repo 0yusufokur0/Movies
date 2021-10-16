@@ -10,6 +10,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.lifecycle.LifecycleObserver
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import com.resurrection.movies.R
 
 
 abstract class BaseBottomSheetFragment<VDB : ViewDataBinding> : BottomSheetDialogFragment(),
@@ -21,6 +22,11 @@ abstract class BaseBottomSheetFragment<VDB : ViewDataBinding> : BottomSheetDialo
     abstract fun getLayoutRes(): Int
 
     abstract fun init(savedInstanceState: Bundle?)
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setStyle(STYLE_NORMAL, R.style.CustomBottomSheetDialogTheme)
+    }
 
     @CallSuper
     override fun onCreateView(
