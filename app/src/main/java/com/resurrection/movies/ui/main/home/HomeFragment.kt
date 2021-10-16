@@ -1,10 +1,10 @@
 package com.resurrection.movies.ui.main.home
 
+import android.app.AlertDialog
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
-import android.view.Menu
-import android.view.MenuInflater
-import android.view.MenuItem
-import android.view.View
+import android.view.*
 import android.widget.Toast
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.viewModels
@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.resurrection.movies.R
 import com.resurrection.movies.data.model.SearchItem
 import com.resurrection.movies.databinding.FragmentHomeBinding
+import com.resurrection.movies.databinding.SortDialogBinding
 import com.resurrection.movies.ui.base.BaseFragment
 import com.resurrection.movies.ui.main.detail.DetailFragment
 import com.resurrection.movies.util.Status.ERROR
@@ -19,6 +20,7 @@ import com.resurrection.movies.util.Status.SUCCESS
 import com.resurrection.movies.util.isNetworkAvailable
 import com.resurrection.movies.util.toast
 import dagger.hilt.android.AndroidEntryPoint
+
 
 @AndroidEntryPoint
 class HomeFragment : BaseFragment<FragmentHomeBinding>() {
@@ -29,24 +31,19 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
     private var adapter: HomeAdapter? = null
     private var toast: Toast? = null
     private var searchString = ""
+    private var alertDialog:AlertDialog? = null
     override fun getLayoutRes(): Int {
         return R.layout.fragment_home
     }
 
     override fun init(savedInstanceState: Bundle?) {
-        viewModel.getMovie("Turkey")
+        alertDialog = setSortAlertDialog()
         setViewModelsObserve()
+        viewModel.getMovie("Turkey")
         toast = toast(requireContext(), "movie not found")
         toast?.cancel()
 
-        binding.swipeResfresLayout.setOnRefreshListener {
-            if (searchString.isNotEmpty()) {
-                viewModel.getMovie(searchString)
-            } else {
-                viewModel.getMovie("Turkey")
-                toast?.cancel()
-            }
-        }
+        binding.swipeResfresLayout.setOnRefreshListener { refresh() }
     }
 
     private fun setViewModelsObserve() {
@@ -87,7 +84,28 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
             }
         })
     }
+    private fun setSortAlertDialog(): AlertDialog? {
+        val dialogBuilder = AlertDialog.Builder(requireContext())
+        val alertBinding: SortDialogBinding = SortDialogBinding.inflate(LayoutInflater.from(context))
+        dialogBuilder.setView(alertBinding.root)
 
+        val alertDialog = dialogBuilder.create()
+        alertDialog.window?.setBackgroundDrawable( ColorDrawable(Color.TRANSPARENT));
+        alertBinding.recommended.setOnClickListener { refresh() }
+        alertBinding.sortAToZ.setOnClickListener { adapter?.sortAToZ() }
+        alertBinding.sortZtoA.setOnClickListener { adapter?.sortZToA() }
+        alertBinding.sortOldToNew.setOnClickListener { adapter?.sortOldToNew() }
+        alertBinding.sortNewToOld.setOnClickListener { adapter?.sortNewToOld() }
+        return alertDialog
+    }
+    private fun refresh(){
+        if (searchString.isNotEmpty()) {
+            viewModel.getMovie(searchString)
+        } else {
+            viewModel.getMovie("Turkey")
+            toast?.cancel()
+        }
+    }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setHasOptionsMenu(true)
@@ -119,6 +137,14 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
                 return false
             }
         })
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.action_sort -> alertDialog?.show()
+        }
+        return super.onOptionsItemSelected(item)
+
     }
 
 

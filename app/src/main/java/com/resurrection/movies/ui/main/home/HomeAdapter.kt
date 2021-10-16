@@ -1,12 +1,16 @@
 package com.resurrection.movies.ui.main.home
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.resurrection.movies.data.model.SearchItem
 import com.resurrection.movies.databinding.MovieItemBinding
 
-class HomeAdapter(private var searchResults: ArrayList<SearchItem>, private var onClick: (SearchItem) -> Unit) :
+class HomeAdapter(
+    private var searchResults: ArrayList<SearchItem>,
+    private var onClick: (SearchItem) -> Unit
+) :
     RecyclerView.Adapter<HomeAdapter.Holder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Holder {
@@ -25,6 +29,38 @@ class HomeAdapter(private var searchResults: ArrayList<SearchItem>, private var 
         return searchResults.size
     }
 
+    @SuppressLint("NotifyDataSetChanged")
+    fun sortAToZ() {
+        var mutable: MutableList<SearchItem> = searchResults.toMutableList()
+        mutable.sortBy { it.title }
+        searchResults = mutable.toList() as ArrayList<SearchItem>
+        notifyDataSetChanged()
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    fun sortZToA() {
+        var mutable: MutableList<SearchItem> = searchResults.toMutableList()
+        mutable.sortBy { it.title }
+        mutable.reverse()
+        searchResults = mutable.toList() as ArrayList<SearchItem>
+        notifyDataSetChanged()
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    fun sortOldToNew() {
+        var mutable: MutableList<SearchItem> = searchResults.toMutableList()
+        mutable.sortBy { it.year }
+        searchResults = mutable.toList() as ArrayList<SearchItem>
+        notifyDataSetChanged()
+    }
+    @SuppressLint("NotifyDataSetChanged")
+    fun sortNewToOld() {
+        var mutable: MutableList<SearchItem> = searchResults.toMutableList()
+        mutable.sortBy { it.year }
+        mutable.reverse()
+        searchResults = mutable.toList() as ArrayList<SearchItem>
+        notifyDataSetChanged()
+    }
     class Holder(
         private var binding: MovieItemBinding,
         private val itemOnClick: (SearchItem) -> Unit

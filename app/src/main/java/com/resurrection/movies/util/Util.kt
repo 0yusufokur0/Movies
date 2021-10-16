@@ -1,10 +1,15 @@
 package com.resurrection.movies.util
 
+import android.app.AlertDialog
 import android.content.Context
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.util.Log
+import android.view.LayoutInflater
 import android.widget.Toast
+import com.resurrection.movies.databinding.SortDialogBinding
 
 fun isNetworkAvailable(context: Context): Boolean {
     val connectivityManager =

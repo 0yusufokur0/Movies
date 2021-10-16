@@ -12,5 +12,10 @@
         app:iconifiedByDefault="false"
         app:showAsAction="always|collapseActionView"
         tools:ignore="HardcodedText" />
+    <item
+        android:id="@+id/action_sort"
+        android:title="Sort..."
+        android:icon="@drawable/ic_baseline_sort_by_alpha_24"
+        app:showAsAction="collapseActionView" />
 
 </menu>
