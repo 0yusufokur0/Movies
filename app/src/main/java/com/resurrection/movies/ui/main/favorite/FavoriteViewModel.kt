@@ -18,12 +18,14 @@ import javax.inject.Inject
 @HiltViewModel
 class FavoriteViewModel @Inject constructor(private val movieRepository: MovieRepository) :
     BaseViewModel() {
-    private var job: Job? = null
+    private var allFavorite: Job? = null
+    private var movieByIdJob: Job? = null
     private val _movies = MutableLiveData<Resource<List<SearchItem>>>()
     val movies: MutableLiveData<Resource<List<SearchItem>>> = _movies
-
+    private val _movie = MutableLiveData<Resource<List<SearchItem>>>()
+    val movie: MutableLiveData<Resource<List<SearchItem>>> = _movie
     fun getAllFavoriteMovies() {
-        job = CoroutineScope(Dispatchers.IO).launch {
+        allFavorite = CoroutineScope(Dispatchers.IO).launch {
             movieRepository.getFavoriteMovies()
                 .onStart { _movies.postValue(Resource.Loading()) }
                 .catch { message -> _movies.postValue(Resource.Error(message)) }
@@ -31,8 +33,18 @@ class FavoriteViewModel @Inject constructor(private val movieRepository: MovieRe
         }
     }
 
+    fun getMovieByTitle(title: String) {
+        movieByIdJob = CoroutineScope(Dispatchers.IO).launch {
+            movieRepository.getMovieByTitle(title)
+                .onStart { _movie.postValue(Resource.Loading()) }
+                .catch { message -> _movie.postValue(Resource.Error(message)) }
+                .collect { it.let { _movie.postValue(it) } }
+        }
+    }
+
     override fun onCleared() {
         super.onCleared()
-        job = null
+        allFavorite = null
     }
 }
+/*low<Resource<List<SearchItem>>>*/

@@ -17,4 +17,9 @@ interface MovieDao {
     @Query("SELECT * FROM search_item where  imdbId like :imdbID")
     suspend fun getMovieById(imdbID: String): SearchItem
 
+    @Query("SELECT * FROM search_item WHERE title LIKE '%' || :title || '%' OR imdbID LIKE '%' || :title || '%'")
+    suspend fun getMovieByTitle(title: String): List<SearchItem>
 }
+
+/*
+@Query("SELECT * FROM table_coin WHERE name LIKE '%' || :parameter || '%' OR symbol LIKE '%' || :parameter || '%'")*/

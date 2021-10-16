@@ -15,5 +15,6 @@ interface MovieRepository {
     suspend fun removeMovie(movie: SearchItem): Flow<Resource<Unit>>
     suspend fun getFavoriteMovies(): Flow<Resource<List<SearchItem>>>
     suspend fun getMovieById(imdbID: String): Flow<Resource<SearchItem>>
+    suspend fun getMovieByTitle(title:String): Flow<Resource<List<SearchItem>>>
 }
 

@@ -28,7 +28,6 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class HomeFragment : BaseFragment<FragmentHomeBinding>() {
-
     val viewModel: HomeViewModel by viewModels()
     private var searchResultsList: ArrayList<SearchItem>? = ArrayList()
     private var searchItemDetail: DetailFragment? = null
@@ -44,6 +43,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
 
 
     override fun init(savedInstanceState: Bundle?) {
+
         setAlertDialogs()
         setViewModelsObserve()
         viewModel.getMovie("Turkey")
@@ -53,7 +53,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
         binding.swipeResfresLayout.setOnRefreshListener { refresh() }
     }
 
-    fun setAlertDialogs(){
+    private fun setAlertDialogs(){
         sortAlertDialog = (requireActivity() as MainActivity).setSortAlertDialog(
             { refresh() },
             { adapter?.sortAToZ() },
@@ -162,7 +162,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
         inflater.inflate(R.menu.main_menu, menu)
 
         val myActionMenuItem: MenuItem = menu.findItem(R.id.action_search)
-        val searchView = myActionMenuItem.actionView as SearchView
+        var searchView = myActionMenuItem.actionView as SearchView
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String): Boolean {
                 return false
@@ -177,6 +177,8 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
                 return false
             }
         })
+
+
     }
 
 

@@ -31,6 +31,9 @@ class MovieRepositoryImpl @Inject constructor(
     override suspend fun getMovieById(imdbID: String): Flow<Resource<SearchItem>> = flow {
         emit(getResourceByDatabaseRequest { movieDao.getMovieById(imdbID) })
     }
+    override suspend fun getMovieByTitle(title: String): Flow<Resource<List<SearchItem>>> = flow {
+        emit(getResourceByDatabaseRequest { movieDao.getMovieByTitle(title) })
+    }
 
 
     override suspend fun insertMovie(movie: SearchItem): Flow<Resource<Unit>> = flow {
@@ -44,5 +47,7 @@ class MovieRepositoryImpl @Inject constructor(
     override suspend fun getFavoriteMovies(): Flow<Resource<List<SearchItem>>> = flow {
         emit(getResourceByDatabaseRequest { movieDao.getFavoriteMovies() })
     }
+
+
 
 }
