@@ -8,14 +8,32 @@
         android:top="10dp">
         <shape>
             <corners
-                android:bottomLeftRadius="@dimen/auth_rounded_num"
-                android:bottomRightRadius="@dimen/auth_rounded_num"
-                android:topLeftRadius="@dimen/auth_rounded_num"
-                android:topRightRadius="@dimen/auth_rounded_num" />
-            <solid android:color="?attr/bottomSheetBg" />
+                android:bottomLeftRadius="@dimen/bottom_sheet_rounded_num"
+                android:bottomRightRadius="@dimen/bottom_sheet_rounded_num"
+                android:topLeftRadius="@dimen/bottom_sheet_rounded_num"
+                android:topRightRadius="@dimen/bottom_sheet_rounded_num" />
+            <gradient
+                android:startColor="@color/start_green"
+                android:centerColor="@color/middle_blue_green"
+                android:endColor="@color/start_blue"
+                android:angle="90"/>
         </shape>
     </item>
 
 </layer-list>
 
 
+
+<!--
+
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+<item>
+    <shape>
+        <gradient
+            android:startColor="#ff2d9a59"
+            android:centerColor="#084D6E"
+            android:endColor="#ff01344f"
+            android:angle="90"/>
+    </shape>
+</item>
+</selector>-->

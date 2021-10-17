@@ -126,6 +126,8 @@ class FavoriteFragment : BaseFragment<FragmentFavoriteBinding>() {
         if (isNetworkAvailable(requireContext())) {
             toast(requireContext(), "updated")
         }
+        binding.swipeResfresLayout.isRefreshing = false
+
     }
 
 }

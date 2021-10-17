@@ -2,5 +2,13 @@
     <string name="app_name">Movies</string>
     <string name="title_home">Home</string>
     <string name="title_favorite">Favorite</string>
+    <string name="search_en">Search</string>
+    <string name="grid_view">Grid View</string>
+    <string name="list_view">List View</string>
+    <string name="recommended">Recommended</string>
+    <string name="sort_a_to_z">Sort A to Z</string>
+    <string name="sort_z_to_a">Sort Z to A</string>
+    <string name="sort_old_to_new">Sort Old to New</string>
+    <string name="sort_new_to_old">Sort New to Old</string>
 
 </resources>

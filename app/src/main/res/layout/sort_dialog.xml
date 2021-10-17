@@ -19,31 +19,31 @@
             android:id="@+id/recommended"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Recommended" />
+            android:text="@string/recommended" />
 
         <RadioButton
             android:id="@+id/sortAToZ"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Sort A to Z" />
+            android:text="@string/sort_a_to_z" />
 
         <RadioButton
             android:id="@+id/sortZtoA"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Sort Z to A" />
+            android:text="@string/sort_z_to_a" />
 
         <RadioButton
             android:id="@+id/sortOldToNew"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Sort Old to New" />
+            android:text="@string/sort_old_to_new" />
 
         <RadioButton
             android:id="@+id/sortNewToOld"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Sort New to Old" />
+            android:text="@string/sort_new_to_old" />
     </RadioGroup>
 
 

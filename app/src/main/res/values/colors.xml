@@ -32,4 +32,18 @@
     <color name="content_text_color">#232323</color>
     <color name="bottomSheetDarkBg">#000000</color>
     <color name="bottomSheetLightBg">#FFFFFF</color>
+<!--    <color name="movie_item_list_bg">#CFCFCF</color>
+    <color name="start_green">#ff2d9a59</color>
+    <color name="middle_blue_green">#084D6E</color>
+    <color name="start_blue">#ff01344f</color>
+    <color name="search_bg">#BF26804B</color>
+    <color name="nav_bg_middle_green">#802D9A59</color>-->
+
+    <color name="movie_item_list_bg">#CFCFCF</color>
+    <color name="start_green">#9A2D2D</color>
+    <color name="middle_blue_green">#073E58</color>
+    <color name="start_blue">#002538</color>
+    <color name="search_bg">#BF802626</color>
+    <color name="nav_bg_middle_green">#809A2D2D</color>
+
 </resources>

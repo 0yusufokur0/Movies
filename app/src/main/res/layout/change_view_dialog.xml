@@ -19,13 +19,13 @@
                 android:id="@+id/gridViewLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Grid View" />
+                android:text="@string/grid_view" />
 
             <RadioButton
                 android:id="@+id/listViewLaout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="List View" />
+                android:text="@string/list_view" />
 
         </RadioGroup>
 

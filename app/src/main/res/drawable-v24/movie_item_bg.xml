@@ -7,15 +7,14 @@
         android:right="0dp"
         android:top="0dp">
         <shape>
-            <corners
-                android:bottomLeftRadius="@dimen/auth_rounded_num"
-                android:bottomRightRadius="@dimen/auth_rounded_num"
-                android:topLeftRadius="@dimen/auth_rounded_num"
-                android:topRightRadius="@dimen/auth_rounded_num" />
-            <solid android:color="?attr/bottomSheetBg" />
+
+            <gradient
+                android:startColor="@color/start_green"
+                android:centerColor="@color/middle_blue_green"
+                android:endColor="@color/start_blue"
+                android:angle="50"/>
         </shape>
     </item>
 
 </layer-list>
-
 

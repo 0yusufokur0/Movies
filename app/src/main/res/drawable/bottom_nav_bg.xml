@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:bottom="0dp"
+        android:left="0dp"
+        android:right="0dp"
+        android:top="0dp">
+        <shape>
+
+            <gradient
+                android:startColor="@color/middle_blue_green"
+                android:centerColor="@color/nav_bg_middle_green"
+                android:endColor="@color/middle_blue_green"
+                android:angle="0"/>
+        </shape>
+    </item>
+
+</layer-list>
+
+    <!--802D9A59-->
+<!--
+    android:startColor="@color/start_green"
+    android:centerColor="@color/middle_blue_green"
+    android:endColor="@color/start_blue"-->

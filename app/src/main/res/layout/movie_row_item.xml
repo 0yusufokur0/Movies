@@ -17,6 +17,8 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
+        android:background="@drawable/movie_item_bg"
+
         android:layout_height="wrap_content">
 
 
@@ -52,10 +54,10 @@
             app:layout_constraintStart_toEndOf="@+id/posterImageView"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            tools:text="Avengers" />
+            tools:text="Movie Name" />
 
         <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/yearTextView"
+            android:id="@+id/typeTextView"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="6dp"
@@ -64,10 +66,10 @@
             android:text="@{searchItem.type}"
             app:layout_constraintStart_toEndOf="@+id/posterImageView"
             app:layout_constraintTop_toBottomOf="@id/titleTextView"
-            tools:text="2014" />
+            tools:text="type" />
 
         <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/descriptionTextView"
+            android:id="@+id/yearTextView"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="6dp"
@@ -76,7 +78,7 @@
             android:textSize="14sp"
             app:layout_constraintEnd_toEndOf="@+id/titleTextView"
             app:layout_constraintTop_toBottomOf="@id/titleTextView"
-            tools:text="2014" />
+            tools:text="year" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

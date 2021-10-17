@@ -20,6 +20,10 @@ import com.resurrection.movies.util.Status.SUCCESS
 import com.resurrection.movies.util.isNetworkAvailable
 import com.resurrection.movies.util.toast
 import dagger.hilt.android.AndroidEntryPoint
+import androidx.recyclerview.widget.RecyclerView
+
+
+
 
 
 @AndroidEntryPoint
@@ -38,6 +42,20 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
     override fun init(savedInstanceState: Bundle?) {
         setupBaseFun()
         binding.swipeResfresLayout.setOnRefreshListener { refresh(tempList) }
+
+        binding.homeRecyclerview.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                if (dy > 10 && (requireActivity() as MainActivity).getBottomNav().isShown()) {
+                    (requireActivity() as MainActivity).getBottomNav().setVisibility(View.GONE)
+                } else if (dy < 0) {
+                    (requireActivity() as MainActivity).getBottomNav().setVisibility(View.VISIBLE)
+                }
+            }
+
+            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                super.onScrollStateChanged(recyclerView, newState)
+            }
+        })
     }
 
     private fun setViewModelsObserve() {
@@ -121,6 +139,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
         if (isNetworkAvailable(requireContext())) {
             toast(requireContext(), "updated")
         }
+        binding.swipeResfresLayout.isRefreshing = false
     }
 
 }
