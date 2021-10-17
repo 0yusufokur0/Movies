@@ -21,5 +21,3 @@ interface MovieDao {
     suspend fun getMovieByTitle(title: String): List<SearchItem>
 }
 
-/*
-@Query("SELECT * FROM table_coin WHERE name LIKE '%' || :parameter || '%' OR symbol LIKE '%' || :parameter || '%'")*/

@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.room.Room
 import com.resurrection.movies.data.db.MovieDatabase
 import com.resurrection.movies.data.db.dao.MovieDao
+import com.resurrection.movies.util.Constants
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -18,7 +19,7 @@ object MovieDaoModule {
     @Provides
     @Singleton
     fun movieDatabase(@ApplicationContext context: Context): MovieDatabase =
-        Room.databaseBuilder(context, MovieDatabase::class.java, "crypto").build()
+        Room.databaseBuilder(context, MovieDatabase::class.java, Constants.DATABASE_NAME).build()
 
     @Provides
     @Singleton

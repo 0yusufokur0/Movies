@@ -1,16 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:tools="http://schemas.android.com/tools"
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
         android:id="@+id/action_sort"
-        android:title="Sort..."
         android:icon="@drawable/ic_baseline_sort_by_alpha_24"
+        android:title="@string/sort_en"
         app:showAsAction="collapseActionView" />
     <item
         android:id="@+id/action_change_layout"
-        android:title="Change Layout View..."
+        android:title="@string/change_layout_view_en"
         app:showAsAction="collapseActionView" />
 
 </menu>

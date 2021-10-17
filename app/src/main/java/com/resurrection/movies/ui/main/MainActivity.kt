@@ -119,8 +119,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(), NavigationBarView.OnIt
     }
 
     override fun onPrepareOptionsMenu(menu: Menu): Boolean {
-        /* val mSearchMenuItem = menu.findItem(R.id.action_search)
-         mSearchMenuItem.actionView as SearchView*/
+
         return true
     }
 

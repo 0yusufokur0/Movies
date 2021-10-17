@@ -22,10 +22,6 @@ import com.resurrection.movies.util.toast
 import dagger.hilt.android.AndroidEntryPoint
 import androidx.recyclerview.widget.RecyclerView
 
-
-
-
-
 @AndroidEntryPoint
 class HomeFragment : BaseFragment<FragmentHomeBinding>() {
     val viewModel: HomeViewModel by viewModels()
@@ -144,7 +140,6 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
 
     override fun onResume() {
         super.onResume()
-        println("running on resume")
         viewModel.getMovie("turkey")
     }
 }

@@ -8,6 +8,7 @@
         <variable
             name="movieDetail"
             type="com.resurrection.movies.data.model.MovieDetails" />
+
     </data>
 
     <androidx.core.widget.NestedScrollView
@@ -63,9 +64,9 @@
                     <androidx.appcompat.widget.AppCompatTextView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:ellipsize="end"
                         android:gravity="center"
                         android:maxLines="1"
-                        android:ellipsize="end"
                         android:text="@{movieDetail.title}"
                         android:textColor="?attr/movieTextColor"
                         android:textSize="25sp"

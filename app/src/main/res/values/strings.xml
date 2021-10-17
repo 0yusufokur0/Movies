@@ -10,5 +10,7 @@
     <string name="sort_z_to_a">Sort Z to A</string>
     <string name="sort_old_to_new">Sort Old to New</string>
     <string name="sort_new_to_old">Sort New to Old</string>
+    <string name="sort_en">Sort...</string>
+    <string name="change_layout_view_en">Change Layout View...</string>
 
 </resources>

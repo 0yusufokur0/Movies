@@ -9,11 +9,13 @@
         <shape>
 
             <gradient
-                android:startColor="@color/start_green"
+                android:angle="50"
                 android:centerColor="@color/middle_blue_green"
                 android:endColor="@color/start_blue"
-                android:angle="50"/>
+                android:startColor="@color/start_green" />
+
         </shape>
+
     </item>
 
 </layer-list>

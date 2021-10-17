@@ -15,26 +15,21 @@ import javax.inject.Inject
 class MovieRepositoryImpl @Inject constructor(
     private val movieApiService: MovieApiService, private val movieDao: MovieDao,
 ) : MovieRepository {
-    override suspend fun getMovieById(
-        id: String,
-        page: Int
-    ): Flow<Resource<SearchResults>> = flow {
+    override suspend fun getMovieById(id: String, page: Int): Flow<Resource<SearchResults>> = flow {
         emit(getResourceByNetworkRequest { movieApiService.getMovieById(id, page) })
     }
 
-    override suspend fun getMovieDetail(
-        imdbId: String,
-    ): Flow<Resource<MovieDetails>> = flow {
+    override suspend fun getMovieDetail(imdbId: String): Flow<Resource<MovieDetails>> = flow {
         emit(getResourceByNetworkRequest { movieApiService.getMovieDetail(imdbId) })
     }
 
     override suspend fun getMovieById(imdbID: String): Flow<Resource<SearchItem>> = flow {
         emit(getResourceByDatabaseRequest { movieDao.getMovieById(imdbID) })
     }
+
     override suspend fun getMovieByTitle(title: String): Flow<Resource<List<SearchItem>>> = flow {
         emit(getResourceByDatabaseRequest { movieDao.getMovieByTitle(title) })
     }
-
 
     override suspend fun insertMovie(movie: SearchItem): Flow<Resource<Unit>> = flow {
         emit(getResourceByDatabaseRequest { movieDao.insertMovie(movie) })
@@ -47,7 +42,5 @@ class MovieRepositoryImpl @Inject constructor(
     override suspend fun getFavoriteMovies(): Flow<Resource<List<SearchItem>>> = flow {
         emit(getResourceByDatabaseRequest { movieDao.getFavoriteMovies() })
     }
-
-
 
 }

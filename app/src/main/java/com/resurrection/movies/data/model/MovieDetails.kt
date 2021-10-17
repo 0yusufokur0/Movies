@@ -1,6 +1,5 @@
 package com.resurrection.movies.data.model
 
-
 import com.google.gson.annotations.SerializedName
 
 data class MovieDetails(

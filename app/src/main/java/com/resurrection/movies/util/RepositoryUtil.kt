@@ -1,7 +1,5 @@
 package com.resurrection.movies.util
 
-import com.resurrection.movies.data.model.SearchResults
-import kotlinx.coroutines.flow.Flow
 import retrofit2.Response
 
 suspend fun <T> getResourceByNetworkRequest(request: suspend () -> Response<T>): Resource<T> {

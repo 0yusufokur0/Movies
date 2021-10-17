@@ -25,8 +25,8 @@
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/homeRecyclerview"
                 android:layout_width="match_parent"
-                android:background="@drawable/bottom_nav_bg"
                 android:layout_height="match_parent"
+                android:background="@drawable/bottom_nav_bg"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"

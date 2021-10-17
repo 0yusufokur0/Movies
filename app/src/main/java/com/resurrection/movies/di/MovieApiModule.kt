@@ -1,6 +1,7 @@
 package com.resurrection.movies.di
 
 import com.resurrection.movies.data.remote.MovieApiService
+import com.resurrection.movies.util.Constants
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -16,9 +17,9 @@ object MovieApiModule {
     @Provides
     @Singleton
     fun retrofitClient(): Retrofit =
-         Retrofit.Builder()
-            .baseUrl("http://www.omdbapi.com/")
-             .addConverterFactory(GsonConverterFactory.create())
+        Retrofit.Builder()
+            .baseUrl(Constants.BASE_URL)
+            .addConverterFactory(GsonConverterFactory.create())
             .build()
 
     @Provides

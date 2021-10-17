@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <attr name="bottomSheetBg" format="color" />
-    <attr name="movieItemBg" format="color"/>
-    <attr name="movieTextColor" format="color"/>
+    <attr name="movieItemBg" format="color" />
+    <attr name="movieTextColor" format="color" />
 </resources>
