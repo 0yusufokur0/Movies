@@ -25,6 +25,9 @@ import com.resurrection.movies.util.isNetworkAvailable
 import com.resurrection.movies.util.toast
 import dagger.hilt.android.AndroidEntryPoint
 
+import androidx.navigation.NavController
+import androidx.navigation.Navigation
+
 
 @AndroidEntryPoint
 class HomeFragment : BaseFragment<FragmentHomeBinding>() {
@@ -37,13 +40,17 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
     private var sortAlertDialog: AlertDialog? = null
     var changeLayoutAlertDialog: AlertDialog? = null
     var currentLayoutView: LayoutViews = LayoutViews.GRID_LAYOUT
+    var searchView:SearchView? = null
+    var searchText:String = ""
     override fun getLayoutRes(): Int {
         return R.layout.fragment_home
     }
 
 
     override fun init(savedInstanceState: Bundle?) {
-
+        (requireActivity() as MainActivity).getSearchView()?.cancelPendingInputEvents()
+        (requireActivity() as MainActivity).getSearchView()?.onCancelPendingInputEvents()
+      (requireActivity() as MainActivity).setTextChangedFun { viewModel.getMovie(it) }
         setAlertDialogs()
         setViewModelsObserve()
         viewModel.getMovie("Turkey")
@@ -151,7 +158,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
         super.onViewCreated(view, savedInstanceState)
         setHasOptionsMenu(true)
     }
-
+/*
     override fun onPrepareOptionsMenu(menu: Menu) {
         val mSearchMenuItem = menu.findItem(R.id.action_search)
         mSearchMenuItem.actionView as SearchView
@@ -162,8 +169,8 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
         inflater.inflate(R.menu.main_menu, menu)
 
         val myActionMenuItem: MenuItem = menu.findItem(R.id.action_search)
-        var searchView = myActionMenuItem.actionView as SearchView
-        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+        searchView = myActionMenuItem.actionView as SearchView
+        searchView?.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String): Boolean {
                 return false
             }
@@ -181,5 +188,11 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
 
     }
 
+    */
 
+
+    override fun onResume() {
+        super.onResume()
+
+    }
 }
