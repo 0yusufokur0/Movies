@@ -14,6 +14,8 @@
         <item name="bottomSheetBg">#000000</item>
         <item name="movieItemBg">#313131</item>
         <item name="movieTextColor">#EAEAEA</item>
+        <item name="android:actionMenuTextColor">@color/white</item>
+
 
     </style>
 
@@ -35,5 +37,14 @@
     <style name="CustomBottomSheetStyle" parent="Widget.Design.BottomSheet.Modal">
         <item name="android:background">@drawable/bottom_sheet_bg</item>
     </style>
-
+    <style name="NavigationView" parent="Widget.MaterialComponents.BottomNavigationView">
+        <item name="itemTextAppearanceActive">@style/ActiveText</item>
+        <item name="itemTextAppearanceInactive">@style/InactiveText</item>
+    </style>
+    <style name="ActiveText">
+        <item name="android:textColor">#fff</item>
+    </style>
+    <style name="InactiveText">
+        <item name="android:textColor">@color/black</item>
+    </style>
 </resources>

@@ -43,9 +43,6 @@ class MainActivity : BaseActivity<ActivityMainBinding>(), NavigationBarView.OnIt
     }
 
     private fun setupBaseComponent() {
-/*
-        binding.toolbar.setBackgroundColor(Color.parseColor("#9E9E9E"))
-*/
         setSupportActionBar(findViewById(R.id.toolbar))
         navController = findNavController(R.id.nav_host_fragment_activity_main)
         binding.navView.setupWithNavController(navController)
@@ -72,6 +69,12 @@ class MainActivity : BaseActivity<ActivityMainBinding>(), NavigationBarView.OnIt
 
         val alertDialog = dialogBuilder.create()
         alertDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        alertBinding.recommended.setTextColor(Color.WHITE)
+        alertBinding.sortAToZ.setTextColor(Color.WHITE)
+        alertBinding.sortZtoA.setTextColor(Color.WHITE)
+        alertBinding.sortOldToNew.setTextColor(Color.WHITE)
+        alertBinding.sortNewToOld.setTextColor(Color.WHITE)
+
         alertBinding.recommended.setOnClickListener { recommended() }
         alertBinding.sortAToZ.setOnClickListener { sortAToZ() }
         alertBinding.sortZtoA.setOnClickListener { sortZToA() }
@@ -88,6 +91,8 @@ class MainActivity : BaseActivity<ActivityMainBinding>(), NavigationBarView.OnIt
         val alertBinding: ChangeViewDialogBinding =
             ChangeViewDialogBinding.inflate(LayoutInflater.from(this))
         dialogBuilder.setView(alertBinding.root)
+        alertBinding.gridViewLayout.setTextColor(Color.WHITE)
+        alertBinding.listViewLaout.setTextColor(Color.WHITE)
 
         val alertDialog = dialogBuilder.create()
         alertDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
@@ -176,6 +181,10 @@ class MainActivity : BaseActivity<ActivityMainBinding>(), NavigationBarView.OnIt
         binding.toolbarTextView.text = null
         this.hideKeyboard(binding.navView)
         return true
+    }
+
+    fun refreshDataWhenRemovedMovie(){
+        navController.navigate(R.id.navigation_favorite)
     }
 
 }

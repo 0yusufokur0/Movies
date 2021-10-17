@@ -5,6 +5,7 @@ import android.graphics.PorterDuffColorFilter
 import android.os.Bundle
 import android.widget.ImageView
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import com.resurrection.movies.R
@@ -12,17 +13,22 @@ import com.resurrection.movies.data.model.MovieDetails
 import com.resurrection.movies.data.model.SearchItem
 import com.resurrection.movies.databinding.FragmentDetailBinding
 import com.resurrection.movies.ui.base.BaseBottomSheetFragment
+import com.resurrection.movies.ui.main.MainActivity
+import com.resurrection.movies.ui.main.favorite.FavoriteFragment
+import com.resurrection.movies.ui.main.home.HomeFragment
 import com.resurrection.movies.util.Status.ERROR
 import com.resurrection.movies.util.Status.SUCCESS
 import com.resurrection.movies.util.isNetworkAvailable
 import com.resurrection.movies.util.toast
 import dagger.hilt.android.AndroidEntryPoint
 
+
+
+
 @AndroidEntryPoint
 class DetailFragment : BaseBottomSheetFragment<FragmentDetailBinding>() {
     private val viewModel: DetailViewModel by viewModels()
     private var favoriteState: Boolean? = false
-
     override fun getLayoutRes(): Int {
         return R.layout.fragment_detail
     }
@@ -89,7 +95,10 @@ class DetailFragment : BaseBottomSheetFragment<FragmentDetailBinding>() {
         })
         viewModel.isRemoved.observe(viewLifecycleOwner,{
             when(it.status){
-                SUCCESS -> toast(requireContext(), "removed favorite")
+                SUCCESS ->{ toast(requireContext(), "removed favorite")
+
+                    (requireActivity() as MainActivity).refreshDataWhenRemovedMovie()
+                }
                 ERROR -> toast(requireContext(), "could not be removed")
             }
         })

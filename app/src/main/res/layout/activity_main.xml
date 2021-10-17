@@ -18,7 +18,7 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:elevation="10dp"
-            android:background="@drawable/bottom_nav_bg"
+            android:background="#002538"
 
             app:layout_scrollFlags="scroll|enterAlways|enterAlwaysCollapsed"
             tools:ignore="MissingConstraints" >
@@ -57,11 +57,10 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="0dp"
             android:layout_marginEnd="0dp"
-            android:background="@drawable/bottom_nav_bg"
+            android:background="#002D45"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-
             app:menu="@menu/bottom_nav_menu" />
 
         <fragment
@@ -70,7 +69,7 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             app:defaultNavHost="true"
-            android:background="?attr/movieItemBg"
+            android:background="@color/black"
             app:layout_constraintBottom_toTopOf="@id/nav_view"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"

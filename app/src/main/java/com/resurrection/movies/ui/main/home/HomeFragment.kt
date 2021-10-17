@@ -142,4 +142,9 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
         binding.swipeResfresLayout.isRefreshing = false
     }
 
+    override fun onResume() {
+        super.onResume()
+        println("running on resume")
+        viewModel.getMovie("turkey")
+    }
 }

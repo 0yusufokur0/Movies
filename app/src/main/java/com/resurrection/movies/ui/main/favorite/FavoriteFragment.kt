@@ -1,9 +1,11 @@
 package com.resurrection.movies.ui.main.favorite
 
 import android.app.AlertDialog
+import android.content.Context
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
+import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
@@ -22,7 +24,7 @@ import com.resurrection.movies.util.toast
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class FavoriteFragment : BaseFragment<FragmentFavoriteBinding>() {
+class FavoriteFragment : BaseFragment<FragmentFavoriteBinding>(){
     private val viewModel: FavoriteViewModel by viewModels()
     private var adapter: HomeAdapter? = null
     private var sortAlertDialog: AlertDialog? = null
@@ -71,6 +73,7 @@ class FavoriteFragment : BaseFragment<FragmentFavoriteBinding>() {
             }
             binding.swipeResfresLayout.isRefreshing = false
         })
+
     }
 
 
@@ -105,6 +108,7 @@ class FavoriteFragment : BaseFragment<FragmentFavoriteBinding>() {
         binding.swipeResfresLayout.isRefreshing = false
         toast?.cancel()
 
+
         when (currentLayoutView) {
             LayoutViews.GRID_LAYOUT -> binding.favoriteRecyclerview.layoutManager =
                 GridLayoutManager(requireContext(), 2)
@@ -129,5 +133,7 @@ class FavoriteFragment : BaseFragment<FragmentFavoriteBinding>() {
         binding.swipeResfresLayout.isRefreshing = false
 
     }
+
+
 
 }
