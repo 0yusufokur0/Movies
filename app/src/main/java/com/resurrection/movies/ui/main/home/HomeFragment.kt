@@ -2,12 +2,8 @@ package com.resurrection.movies.ui.main.home
 
 import android.app.AlertDialog
 import android.os.Bundle
-import android.view.Menu
-import android.view.MenuInflater
-import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
-import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
@@ -25,61 +21,23 @@ import com.resurrection.movies.util.isNetworkAvailable
 import com.resurrection.movies.util.toast
 import dagger.hilt.android.AndroidEntryPoint
 
-import androidx.navigation.NavController
-import androidx.navigation.Navigation
-
 
 @AndroidEntryPoint
 class HomeFragment : BaseFragment<FragmentHomeBinding>() {
     val viewModel: HomeViewModel by viewModels()
-    private var searchResultsList: ArrayList<SearchItem>? = ArrayList()
     private var searchItemDetail: DetailFragment? = null
     private var adapter: HomeAdapter? = null
     private var toast: Toast? = null
-    private var searchString = ""
     private var sortAlertDialog: AlertDialog? = null
     var changeLayoutAlertDialog: AlertDialog? = null
     var currentLayoutView: LayoutViews = LayoutViews.GRID_LAYOUT
-    var searchView:SearchView? = null
-    var searchText:String = ""
-    override fun getLayoutRes(): Int {
-        return R.layout.fragment_home
-    }
+    private var tempList: ArrayList<SearchItem>? = ArrayList()
 
+    override fun getLayoutRes(): Int = R.layout.fragment_home
 
     override fun init(savedInstanceState: Bundle?) {
-        (requireActivity() as MainActivity).getSearchView()?.cancelPendingInputEvents()
-        (requireActivity() as MainActivity).getSearchView()?.onCancelPendingInputEvents()
-      (requireActivity() as MainActivity).setTextChangedFun { viewModel.getMovie(it) }
-        setAlertDialogs()
-        setViewModelsObserve()
-        viewModel.getMovie("Turkey")
-        toast = toast(requireContext(), "movie not found")
-        toast?.cancel()
-
-        binding.swipeResfresLayout.setOnRefreshListener { refresh() }
-    }
-
-    private fun setAlertDialogs(){
-        sortAlertDialog = (requireActivity() as MainActivity).setSortAlertDialog(
-            { refresh() },
-            { adapter?.sortAToZ() },
-            { adapter?.sortZToA() },
-            { adapter?.sortOldToNew() },
-            { adapter?.sortOldToNew() })
-        changeLayoutAlertDialog = (requireActivity() as MainActivity)
-            .setRecyclerViewLayoutAlertDialog(
-                {
-                    currentLayoutView = LayoutViews.GRID_LAYOUT
-                    refresh()
-                },
-                {
-                    currentLayoutView = LayoutViews.LIST_LAYOUT
-                    refresh()
-                })
-
-        (requireActivity() as MainActivity).getAlertDialogs(sortAlertDialog, changeLayoutAlertDialog)
-
+        setupBaseFun()
+        binding.swipeResfresLayout.setOnRefreshListener { refresh(tempList) }
     }
 
     private fun setViewModelsObserve() {
@@ -88,16 +46,14 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
                 SUCCESS -> {
                     binding.progressBar.visibility = View.VISIBLE
                     it.let { searchResult ->
-                        searchResult.data?.search?.let { searchList ->
-                            setMovie(searchList)
-                        } ?: run {
-                            toast?.show()
-                            binding.homeRecyclerview.adapter =
-                                HomeAdapter(ArrayList(), currentLayoutView) {}
-                            binding.progressBar.visibility = View.GONE
-                            isNetworkAvailable(requireContext())
-                        }
-
+                        searchResult.data?.search?.let { refresh(it as ArrayList<SearchItem>) }
+                            ?: run {
+                                toast?.show()
+                                binding.homeRecyclerview.adapter =
+                                    HomeAdapter(ArrayList(), currentLayoutView) {}
+                                binding.progressBar.visibility = View.GONE
+                                isNetworkAvailable(requireContext())
+                            }
                     }
                     binding.swipeResfresLayout.isRefreshing = false
                 }
@@ -105,12 +61,45 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
             }
         })
     }
-
-    private fun setMovie(it: List<SearchItem>?) {
+    fun setupBaseFun(){
+        setHasOptionsMenu(true)
+        (requireActivity() as MainActivity).getSearchView()?.cancelPendingInputEvents()
+        (requireActivity() as MainActivity).getSearchView()?.onCancelPendingInputEvents()
+        (requireActivity() as MainActivity).setTextChangedFun { viewModel.getMovie(it) }
+        setAlertDialogs()
+        setViewModelsObserve()
+        viewModel.getMovie("Turkey")
+        toast = toast(requireContext(), "movie not found")
         toast?.cancel()
-        searchResultsList?.clear()
-        searchResultsList?.addAll(it!!)
+    }
 
+    private fun setAlertDialogs() {
+        sortAlertDialog = (requireActivity() as MainActivity).setSortAlertDialog(
+            { refresh(tempList) },
+            { adapter?.sortAToZ() },
+            { adapter?.sortZToA() },
+            { adapter?.sortOldToNew() },
+            { adapter?.sortOldToNew() })
+        changeLayoutAlertDialog = (requireActivity() as MainActivity)
+            .setRecyclerViewLayoutAlertDialog(
+                {
+                    currentLayoutView = LayoutViews.GRID_LAYOUT
+                    refresh(tempList)
+                },
+                {
+                    currentLayoutView = LayoutViews.LIST_LAYOUT
+                    refresh(tempList)
+                })
+
+        (requireActivity() as MainActivity).getAlertDialogs(
+            sortAlertDialog,
+            changeLayoutAlertDialog
+        )
+    }
+
+    private fun refresh(it: ArrayList<SearchItem>?) {
+        tempList = it
+        toast?.cancel()
         when (currentLayoutView) {
             LayoutViews.GRID_LAYOUT -> binding.homeRecyclerview.layoutManager =
                 GridLayoutManager(requireContext(), 2)
@@ -118,11 +107,8 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
                 LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
         }
         adapter =
-            searchResultsList?.let { it1 ->
-                HomeAdapter(
-                    it1,
-                    currentLayoutView
-                ) { searchItem ->
+            it?.let {
+                HomeAdapter(it, currentLayoutView) { searchItem ->
                     searchItemDetail = DetailFragment()
                     val bundle = Bundle()
                     bundle.putString("movieId", searchItem.imdbID)
@@ -137,62 +123,4 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
         }
     }
 
-    private fun refresh() {
-
-        if (searchResultsList == null) {
-            setMovie(searchResultsList)
-            binding.swipeResfresLayout.isRefreshing = false
-        } else {
-            if (searchString.isNotEmpty()) {
-                viewModel.getMovie(searchString)
-            } else {
-                viewModel.getMovie("Turkey")
-                binding.swipeResfresLayout.isRefreshing = false
-                toast?.cancel()
-            }
-        }
-
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        setHasOptionsMenu(true)
-    }
-/*
-    override fun onPrepareOptionsMenu(menu: Menu) {
-        val mSearchMenuItem = menu.findItem(R.id.action_search)
-        mSearchMenuItem.actionView as SearchView
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        super.onCreateOptionsMenu(menu, inflater)
-        inflater.inflate(R.menu.main_menu, menu)
-
-        val myActionMenuItem: MenuItem = menu.findItem(R.id.action_search)
-        searchView = myActionMenuItem.actionView as SearchView
-        searchView?.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-            override fun onQueryTextSubmit(query: String): Boolean {
-                return false
-            }
-
-            override fun onQueryTextChange(newText: String): Boolean {
-                if (newText.isNotEmpty()) {
-                    viewModel.getMovie(newText)
-                    searchString = newText
-                }
-                println(newText)
-                return false
-            }
-        })
-
-
-    }
-
-    */
-
-
-    override fun onResume() {
-        super.onResume()
-
-    }
 }

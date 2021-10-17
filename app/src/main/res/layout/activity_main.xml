@@ -13,7 +13,8 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorPrimary"
-            android:elevation="10dp"/>
+            android:elevation="10dp"
+            tools:ignore="MissingConstraints" />
 
         <com.google.android.material.bottomnavigation.BottomNavigationView
             android:id="@+id/nav_view"
