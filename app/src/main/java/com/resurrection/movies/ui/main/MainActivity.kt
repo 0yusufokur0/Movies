@@ -8,21 +8,19 @@ import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.widget.SearchView
+import androidx.core.widget.doOnTextChanged
 import androidx.navigation.NavController
+import androidx.navigation.NavOptions
 import androidx.navigation.findNavController
 import androidx.navigation.ui.setupWithNavController
+import com.google.android.material.navigation.NavigationBarView
 import com.resurrection.movies.R
 import com.resurrection.movies.databinding.ActivityMainBinding
 import com.resurrection.movies.databinding.ChangeViewDialogBinding
 import com.resurrection.movies.databinding.SortDialogBinding
 import com.resurrection.movies.ui.base.BaseActivity
-import dagger.hilt.android.AndroidEntryPoint
-import android.text.Editable
-
-import android.text.TextWatcher
-import androidx.core.widget.doOnTextChanged
-import com.google.android.material.navigation.NavigationBarView
 import com.resurrection.movies.util.hideKeyboard
+import dagger.hilt.android.AndroidEntryPoint
 
 
 @AndroidEntryPoint
@@ -31,7 +29,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(), NavigationBarView.OnIt
     private var sortAlertDialog: AlertDialog? = null
     private var changeLayoutAlertDialog: AlertDialog? = null
     private var textChangedFun: ((String) -> Unit?)? = null
-    lateinit var navController:NavController
+    lateinit var navController: NavController
 
     override fun getLayoutRes(): Int = R.layout.activity_main
 
@@ -49,6 +47,29 @@ class MainActivity : BaseActivity<ActivityMainBinding>(), NavigationBarView.OnIt
         binding.navView.setupWithNavController(navController)
         binding.navView.setOnItemSelectedListener(this)
     }
+
+    override fun onNavigationItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.navigation_home -> {
+                navController.navigate(
+                    R.id.navigation_home, null, NavOptions.Builder()
+                        .setEnterAnim(R.anim.left_to_right_first)
+                        .setExitAnim(R.anim.left_to_right_second).build()
+                )
+            }
+            R.id.navigation_favorite -> {
+                navController.navigate(
+                    R.id.navigation_favorite, null, NavOptions.Builder()
+                        .setEnterAnim(R.anim.right_to_left_first)
+                        .setExitAnim(R.anim.right_to_left_second).build()
+                )
+            }
+        }
+        binding.toolbarTextView.text = null
+        this.hideKeyboard(binding.navView)
+        return true
+    }
+
 
     fun getAlertDialogs(mSortAlertDialog: AlertDialog?, mChangeLayoutAlertDialog: AlertDialog?) {
         sortAlertDialog = mSortAlertDialog
@@ -102,9 +123,10 @@ class MainActivity : BaseActivity<ActivityMainBinding>(), NavigationBarView.OnIt
     fun setTextChangedFun(mtextChangedFun: ((String) -> Unit?)?) {
         textChangedFun = mtextChangedFun
     }
+
     override fun onPrepareOptionsMenu(menu: Menu): Boolean {
-       /* val mSearchMenuItem = menu.findItem(R.id.action_search)
-        mSearchMenuItem.actionView as SearchView*/
+        /* val mSearchMenuItem = menu.findItem(R.id.action_search)
+         mSearchMenuItem.actionView as SearchView*/
         return true
     }
 
@@ -142,16 +164,6 @@ class MainActivity : BaseActivity<ActivityMainBinding>(), NavigationBarView.OnIt
         }
         return super.onOptionsItemSelected(item)
 
-    }
-
-    override fun onNavigationItemSelected(item: MenuItem): Boolean {
-        when(item.itemId){
-            R.id.navigation_home -> navController.navigate(R.id.navigation_home)
-            R.id.navigation_favorite -> navController.navigate(R.id.navigation_favorite)
-        }
-        binding.toolbarTextView.text = null
-        this.hideKeyboard(binding.navView)
-        return true
     }
 
 
