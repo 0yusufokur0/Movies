@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <item
+   <!-- <item
         android:id="@+id/action_search"
         android:icon="@drawable/ic_search"
         android:iconifiedByDefault="true"
@@ -11,7 +11,7 @@
         app:actionViewClass="androidx.appcompat.widget.SearchView"
         app:iconifiedByDefault="false"
         app:showAsAction="ifRoom|never"
-        tools:ignore="HardcodedText" />
+        tools:ignore="HardcodedText" />-->
     <item
         android:id="@+id/action_sort"
         android:title="Sort..."

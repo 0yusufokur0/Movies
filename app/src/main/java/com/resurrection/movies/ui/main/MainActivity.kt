@@ -17,24 +17,37 @@ import com.resurrection.movies.databinding.ChangeViewDialogBinding
 import com.resurrection.movies.databinding.SortDialogBinding
 import com.resurrection.movies.ui.base.BaseActivity
 import dagger.hilt.android.AndroidEntryPoint
+import android.text.Editable
+
+import android.text.TextWatcher
+import androidx.core.widget.doOnTextChanged
+import com.google.android.material.navigation.NavigationBarView
+import com.resurrection.movies.util.hideKeyboard
+
 
 @AndroidEntryPoint
-class MainActivity : BaseActivity<ActivityMainBinding>() {
+class MainActivity : BaseActivity<ActivityMainBinding>(), NavigationBarView.OnItemSelectedListener {
     var searchView: SearchView? = null
     private var sortAlertDialog: AlertDialog? = null
     private var changeLayoutAlertDialog: AlertDialog? = null
     private var textChangedFun: ((String) -> Unit?)? = null
-
+    lateinit var navController:NavController
 
     override fun getLayoutRes(): Int = R.layout.activity_main
 
-    override fun init(savedInstanceState: Bundle?) { setupBaseComponent() }
+    override fun init(savedInstanceState: Bundle?) {
+        setupBaseComponent()
+        binding.toolbarTextView.doOnTextChanged { text, start, count, after ->
+            textChangedFun?.let { it1 -> it1(binding.toolbarTextView.text.toString()) }
+        }
+    }
 
     private fun setupBaseComponent() {
-        binding.toolbar.setBackgroundColor(Color.RED)
+        binding.toolbar.setBackgroundColor(Color.parseColor("#9E9E9E"))
         setSupportActionBar(findViewById(R.id.toolbar))
-        var navController = findNavController(R.id.nav_host_fragment_activity_main)
+        navController = findNavController(R.id.nav_host_fragment_activity_main)
         binding.navView.setupWithNavController(navController)
+        binding.navView.setOnItemSelectedListener(this)
     }
 
     fun getAlertDialogs(mSortAlertDialog: AlertDialog?, mChangeLayoutAlertDialog: AlertDialog?) {
@@ -89,16 +102,16 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
     fun setTextChangedFun(mtextChangedFun: ((String) -> Unit?)?) {
         textChangedFun = mtextChangedFun
     }
-
     override fun onPrepareOptionsMenu(menu: Menu): Boolean {
-        val mSearchMenuItem = menu.findItem(R.id.action_search)
-        mSearchMenuItem.actionView as SearchView
+       /* val mSearchMenuItem = menu.findItem(R.id.action_search)
+        mSearchMenuItem.actionView as SearchView*/
         return true
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.main_menu, menu)
 
+/*
         menu?.let {
             var myActionMenuItem = menu.findItem(R.id.action_search)
             searchView = myActionMenuItem.actionView as SearchView
@@ -114,6 +127,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
 
             })
         }
+*/
 
         return super.onCreateOptionsMenu(menu)
 
@@ -125,10 +139,19 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
             R.id.action_change_layout -> {
                 changeLayoutAlertDialog?.show()
             }
-
         }
         return super.onOptionsItemSelected(item)
 
+    }
+
+    override fun onNavigationItemSelected(item: MenuItem): Boolean {
+        when(item.itemId){
+            R.id.navigation_home -> navController.navigate(R.id.navigation_home)
+            R.id.navigation_favorite -> navController.navigate(R.id.navigation_favorite)
+        }
+        binding.toolbarTextView.text = null
+        this.hideKeyboard(binding.navView)
+        return true
     }
 
 
