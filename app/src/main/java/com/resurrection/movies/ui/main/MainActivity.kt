@@ -7,8 +7,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
-import androidx.appcompat.widget.SearchView
-import androidx.appcompat.widget.Toolbar
 import androidx.core.widget.doOnTextChanged
 import androidx.navigation.NavController
 import androidx.navigation.NavOptions
@@ -27,10 +25,9 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MainActivity : BaseActivity<ActivityMainBinding>(), NavigationBarView.OnItemSelectedListener {
-    var searchView: SearchView? = null
     private var sortAlertDialog: AlertDialog? = null
     private var changeLayoutAlertDialog: AlertDialog? = null
-    private var textChangedFun: ((String) -> Unit?)? = null
+    private var textChangedFun: ((String) -> Any?)? = null
     lateinit var navController: NavController
 
     override fun getLayoutRes(): Int = R.layout.activity_main
@@ -48,7 +45,6 @@ class MainActivity : BaseActivity<ActivityMainBinding>(), NavigationBarView.OnIt
         binding.navView.setupWithNavController(navController)
         binding.navView.setOnItemSelectedListener(this)
     }
-
 
     fun getAlertDialogs(mSortAlertDialog: AlertDialog?, mChangeLayoutAlertDialog: AlertDialog?) {
         sortAlertDialog = mSortAlertDialog
@@ -69,17 +65,12 @@ class MainActivity : BaseActivity<ActivityMainBinding>(), NavigationBarView.OnIt
 
         val alertDialog = dialogBuilder.create()
         alertDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-        alertBinding.recommended.setTextColor(Color.WHITE)
-        alertBinding.sortAToZ.setTextColor(Color.WHITE)
-        alertBinding.sortZtoA.setTextColor(Color.WHITE)
-        alertBinding.sortOldToNew.setTextColor(Color.WHITE)
-        alertBinding.sortNewToOld.setTextColor(Color.WHITE)
-
         alertBinding.recommended.setOnClickListener { recommended() }
         alertBinding.sortAToZ.setOnClickListener { sortAToZ() }
         alertBinding.sortZtoA.setOnClickListener { sortZToA() }
         alertBinding.sortOldToNew.setOnClickListener { sortOldToNew() }
         alertBinding.sortNewToOld.setOnClickListener { sortNewToOld() }
+
         return alertDialog
     }
 
@@ -88,6 +79,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(), NavigationBarView.OnIt
         setListLayout: () -> Unit
     ): AlertDialog? {
         val dialogBuilder = AlertDialog.Builder(this)
+
         val alertBinding: ChangeViewDialogBinding =
             ChangeViewDialogBinding.inflate(LayoutInflater.from(this))
         dialogBuilder.setView(alertBinding.root)
@@ -98,34 +90,18 @@ class MainActivity : BaseActivity<ActivityMainBinding>(), NavigationBarView.OnIt
         alertDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         alertBinding.gridViewLayout.setOnClickListener { setGridLayout() }
         alertBinding.listViewLaout.setOnClickListener { setListLayout() }
+
         return alertDialog
     }
 
+    fun setTextChangedFun(mtextChangedFun: ((String) -> Any?)?) { textChangedFun = mtextChangedFun }
 
-    @JvmName("getSearchView1")
-    fun getSearchView(): SearchView? {
-        return searchView
-    }
+    fun getBottomNav(): BottomNavigationView = binding.navView
 
-    fun getBottomNav(): BottomNavigationView {
-        return binding.navView
-    }
-    fun getToolBar(): Toolbar {
-        return binding.toolbar
-    }
-
-    fun setTextChangedFun(mtextChangedFun: ((String) -> Unit?)?) {
-        textChangedFun = mtextChangedFun
-    }
-
-    override fun onPrepareOptionsMenu(menu: Menu): Boolean {
-
-        return true
-    }
+    override fun onPrepareOptionsMenu(menu: Menu): Boolean = true
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.main_menu, menu)
-
         return super.onCreateOptionsMenu(menu)
 
     }
@@ -141,18 +117,13 @@ class MainActivity : BaseActivity<ActivityMainBinding>(), NavigationBarView.OnIt
 
     }
 
-    override fun onNavigationItemSelected(item: MenuItem): Boolean {
-        /*       val navHostFragment: NavHostFragment =
-                   supportFragmentManager.findFragmentById(R.id.nav_host_fragment_activity_main) as NavHostFragment
-               navHostFragment!!.childFragmentManager.fragments[0]
-               println(navHostFragment!!.childFragmentManager.fragments[0].id)
-               */
-        val currentFragmentId: Int? = navController.currentDestination?.id
+    fun refreshDataWhenRemovedMovie(){ navController.navigate(R.id.navigation_favorite) }
 
+    override fun onNavigationItemSelected(item: MenuItem): Boolean {
+        val currentFragmentId: Int? = navController.currentDestination?.id
 
         when (item.itemId) {
             R.id.navigation_home -> {
-
                 if (item.itemId != currentFragmentId){
                     navController.navigate(
                         R.id.navigation_home, null, NavOptions.Builder()
@@ -172,9 +143,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(), NavigationBarView.OnIt
                     )
                 }
                 else navController.navigate(R.id.navigation_favorite)
-
             }
-
         }
 
         binding.toolbarTextView.text = null
@@ -182,8 +151,5 @@ class MainActivity : BaseActivity<ActivityMainBinding>(), NavigationBarView.OnIt
         return true
     }
 
-    fun refreshDataWhenRemovedMovie(){
-        navController.navigate(R.id.navigation_favorite)
-    }
 
 }

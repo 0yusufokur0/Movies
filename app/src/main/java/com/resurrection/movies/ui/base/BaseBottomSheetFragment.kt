@@ -16,8 +16,8 @@ import com.resurrection.movies.R
 abstract class BaseBottomSheetFragment<VDB : ViewDataBinding> : BottomSheetDialogFragment(),
     LifecycleObserver {
 
-    lateinit var binding: VDB
-
+    private var _binding: VDB? = null
+    val binding get() = _binding!!
     @LayoutRes
     abstract fun getLayoutRes(): Int
 
@@ -34,8 +34,8 @@ abstract class BaseBottomSheetFragment<VDB : ViewDataBinding> : BottomSheetDialo
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = DataBindingUtil.inflate(inflater, getLayoutRes(), container, false)
-        return binding.root
+        _binding = DataBindingUtil.inflate(inflater, getLayoutRes(), container, false)
+        return _binding?.root
     }
 
     @CallSuper
@@ -43,4 +43,10 @@ abstract class BaseBottomSheetFragment<VDB : ViewDataBinding> : BottomSheetDialo
         super.onViewCreated(view, savedInstanceState)
         init(savedInstanceState)
     }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
 }

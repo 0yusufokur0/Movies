@@ -17,35 +17,39 @@
 
             <RadioButton
                 android:id="@+id/recommended"
+                android:textColor="@color/white"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/recommended" />
 
             <RadioButton
                 android:id="@+id/sortAToZ"
+                android:textColor="@color/white"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/sort_a_to_z" />
 
             <RadioButton
                 android:id="@+id/sortZtoA"
+                android:textColor="@color/white"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/sort_z_to_a" />
 
             <RadioButton
                 android:id="@+id/sortOldToNew"
+                android:textColor="@color/white"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/sort_old_to_new" />
 
             <RadioButton
                 android:id="@+id/sortNewToOld"
+                android:textColor="@color/white"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/sort_new_to_old" />
         </RadioGroup>
-
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

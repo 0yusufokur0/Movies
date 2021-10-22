@@ -1,13 +1,10 @@
 package com.resurrection.movies.ui.main.favorite
 
 import android.app.AlertDialog
-import android.content.Context
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
-import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.resurrection.movies.R
@@ -42,10 +39,8 @@ class FavoriteFragment : BaseFragment<FragmentFavoriteBinding>(){
         }
     }
 
-    fun setupBaseFun() {
+    private fun setupBaseFun() {
         setHasOptionsMenu(true)
-        (requireActivity() as MainActivity).getSearchView()?.cancelPendingInputEvents()
-        (requireActivity() as MainActivity).getSearchView()?.onCancelPendingInputEvents()
         (requireActivity() as MainActivity).setTextChangedFun { viewModel.getMovieByTitle(it) }
         setAlertDialogs()
         setViewModelsObserve()
@@ -65,7 +60,7 @@ class FavoriteFragment : BaseFragment<FragmentFavoriteBinding>(){
             binding.swipeResfresLayout.isRefreshing = false
         })
 
-        viewModel.movie.observe(viewLifecycleOwner, Observer {
+        viewModel.movie.observe(viewLifecycleOwner, {
             when (it.status) {
                 SUCCESS -> it.data?.let { refresh(it as ArrayList<SearchItem>) }
                 LOADING -> binding.progressBar.visibility = View.VISIBLE
@@ -73,7 +68,6 @@ class FavoriteFragment : BaseFragment<FragmentFavoriteBinding>(){
             }
             binding.swipeResfresLayout.isRefreshing = false
         })
-
     }
 
 
@@ -83,13 +77,12 @@ class FavoriteFragment : BaseFragment<FragmentFavoriteBinding>(){
             { adapter?.sortAToZ() },
             { adapter?.sortZToA() },
             { adapter?.sortOldToNew() },
-            { adapter?.sortOldToNew() })
+            { adapter?.sortNewToOld() })
         changeLayoutAlertDialog = (requireActivity() as MainActivity)
             .setRecyclerViewLayoutAlertDialog(
                 {
                     currentLayoutView = LayoutViews.GRID_LAYOUT
                     tempList?.let { refresh(it) }
-
                 },
                 {
                     currentLayoutView = LayoutViews.LIST_LAYOUT
@@ -107,8 +100,7 @@ class FavoriteFragment : BaseFragment<FragmentFavoriteBinding>(){
         tempList = it
         binding.swipeResfresLayout.isRefreshing = false
         toast?.cancel()
-
-
+        
         when (currentLayoutView) {
             LayoutViews.GRID_LAYOUT -> binding.favoriteRecyclerview.layoutManager =
                 GridLayoutManager(requireContext(), 2)
@@ -118,10 +110,10 @@ class FavoriteFragment : BaseFragment<FragmentFavoriteBinding>(){
         adapter =
             it?.let {
                 HomeAdapter(it, currentLayoutView) { searchItem ->
-                    var searchItemDetail: DetailFragment? = DetailFragment()
+                    val searchItemDetail = DetailFragment()
                     val bundle = Bundle()
                     bundle.putString("movieId", searchItem.imdbID)
-                    searchItemDetail!!.arguments = bundle
+                    searchItemDetail.arguments = bundle
                     searchItemDetail.show(parentFragmentManager, "Bottom Sheet")
                 }
             }
@@ -133,7 +125,4 @@ class FavoriteFragment : BaseFragment<FragmentFavoriteBinding>(){
         binding.swipeResfresLayout.isRefreshing = false
 
     }
-
-
-
 }

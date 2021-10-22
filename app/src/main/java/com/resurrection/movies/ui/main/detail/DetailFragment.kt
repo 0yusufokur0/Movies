@@ -5,25 +5,18 @@ import android.graphics.PorterDuffColorFilter
 import android.os.Bundle
 import android.widget.ImageView
 import androidx.core.content.ContextCompat
-import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import com.resurrection.movies.R
 import com.resurrection.movies.data.model.MovieDetails
 import com.resurrection.movies.data.model.SearchItem
 import com.resurrection.movies.databinding.FragmentDetailBinding
 import com.resurrection.movies.ui.base.BaseBottomSheetFragment
 import com.resurrection.movies.ui.main.MainActivity
-import com.resurrection.movies.ui.main.favorite.FavoriteFragment
-import com.resurrection.movies.ui.main.home.HomeFragment
 import com.resurrection.movies.util.Status.ERROR
 import com.resurrection.movies.util.Status.SUCCESS
 import com.resurrection.movies.util.isNetworkAvailable
 import com.resurrection.movies.util.toast
 import dagger.hilt.android.AndroidEntryPoint
-
-
-
 
 @AndroidEntryPoint
 class DetailFragment : BaseBottomSheetFragment<FragmentDetailBinding>() {
@@ -44,7 +37,6 @@ class DetailFragment : BaseBottomSheetFragment<FragmentDetailBinding>() {
             viewModel.getMovieFavoriteState(data)
         }
         binding.favoriteImageView.setOnClickListener { setFavoriteAction() }
-
     }
 
     private fun setFavoriteAction() {
@@ -70,7 +62,6 @@ class DetailFragment : BaseBottomSheetFragment<FragmentDetailBinding>() {
                 true
             }
         }
-
     }
 
     private fun setViewModelsObserve() {
@@ -79,12 +70,6 @@ class DetailFragment : BaseBottomSheetFragment<FragmentDetailBinding>() {
                 SUCCESS -> it.data?.let { binding.movieDetail = it }
                 ERROR -> toast(requireContext(), "could not be load")
             }
-        })
-        viewModel.isFavorite.observe(viewLifecycleOwner, {
-            when (it.status) {
-                SUCCESS -> favoriteState = it.data //it.data
-            }
-            favoriteState?.let { binding.favoriteImageView.changeIconColor(favoriteState!!) }
         })
 
         viewModel.insertMovie.observe(viewLifecycleOwner, {
@@ -95,12 +80,13 @@ class DetailFragment : BaseBottomSheetFragment<FragmentDetailBinding>() {
         })
         viewModel.isRemoved.observe(viewLifecycleOwner,{
             when(it.status){
-                SUCCESS ->{ toast(requireContext(), "removed favorite")
-
-                    (requireActivity() as MainActivity).refreshDataWhenRemovedMovie()
-                }
+                SUCCESS -> (requireActivity() as MainActivity).refreshDataWhenRemovedMovie()
                 ERROR -> toast(requireContext(), "could not be removed")
             }
+        })
+        viewModel.isFavorite.observe(viewLifecycleOwner, {
+            when (it.status) {SUCCESS -> favoriteState = it.data  }
+            favoriteState?.let { binding.favoriteImageView.changeIconColor(favoriteState!!) }
         })
     }
 
@@ -111,5 +97,4 @@ class DetailFragment : BaseBottomSheetFragment<FragmentDetailBinding>() {
             PorterDuff.Mode.SRC_IN
         )
     }
-
 }

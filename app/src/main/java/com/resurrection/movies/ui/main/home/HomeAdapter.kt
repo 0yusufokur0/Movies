@@ -12,95 +12,109 @@ import com.resurrection.movies.util.LayoutViews
 
 class HomeAdapter(
     private var searchResults: ArrayList<SearchItem>,
-    private var layoutViewType: LayoutViews/* = LayoutViews.GRID_LAYOUT*/,
+    private var layoutViewType: LayoutViews,
     private var onClick: (SearchItem) -> Unit
-) :
-    RecyclerView.Adapter<HomeAdapter.Holder>() {
-    lateinit var listBinding: MovieRowItemBinding
-    lateinit var gridItemBinding: MovieGridItemBinding
+) : RecyclerView.Adapter<RecyclerView.ViewHolder>()
+{
     var view: View? = null
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Holder {
-        var listViewBinding: MovieRowItemBinding = MovieRowItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        var gridViewBinding: MovieGridItemBinding = MovieGridItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        when (layoutViewType) {
-            LayoutViews.GRID_LAYOUT -> { view = gridViewBinding.root }
-            LayoutViews.LIST_LAYOUT -> { view = listViewBinding.root }
+
+    override fun onCreateViewHolder(
+        parent: ViewGroup,
+        viewType: Int
+    ): RecyclerView.ViewHolder {
+        return when (layoutViewType) {
+            LayoutViews.LIST_LAYOUT -> {
+                val listViewBinding =
+                    MovieRowItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+                ListHolder(listViewBinding, onClick)
+            }
+            LayoutViews.GRID_LAYOUT -> {
+                val gridViewBinding =
+                    MovieGridItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+                GridHolder(gridViewBinding, onClick)
+            }
         }
-        var holder: Holder = Holder(onClick, view!!, layoutViewType)
-        holder.setViewDataBinding(listViewBinding, gridViewBinding)
-
-        return holder
-
     }
-    override fun onBindViewHolder(holder: Holder, position: Int) { holder.bind(searchResults[position]) }
 
-    override fun getItemCount(): Int { return searchResults.size }
-
-
-    class Holder(
-        private val itemOnClick: (SearchItem) -> Unit,
-        private var view: View,
-        private var layoutViewType: LayoutViews/* = LayoutViews.GRID_LAYOUT*/
-    ) : RecyclerView.ViewHolder(view) {
-
-        private lateinit var listViewBindingT: MovieRowItemBinding
-        private lateinit var gridViewBindingT: MovieGridItemBinding
-        fun setViewDataBinding(listViewBinding: MovieRowItemBinding, gridViewBinding: MovieGridItemBinding) {
-            listViewBindingT = listViewBinding
-            gridViewBindingT = gridViewBinding
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        when (layoutViewType) {
+            LayoutViews.GRID_LAYOUT -> (holder as GridHolder).bind(searchResults[position])
+            LayoutViews.LIST_LAYOUT -> (holder as ListHolder).bind(searchResults[position])
         }
+    }
+
+    override fun getItemCount(): Int {
+        return searchResults.size
+    }
+
+    class ListHolder(
+        private var listViewBinding: MovieRowItemBinding,
+        private val itemOnClick: (SearchItem) -> Unit
+    ) : RecyclerView.ViewHolder(listViewBinding.root) {
+        fun bind(searchItem: SearchItem) {
+            listViewBinding.searchItem = searchItem
+            itemView.setOnClickListener { itemOnClick(searchItem) }
+        }
+    }
+
+    class GridHolder(
+        private var gridViewBinding: MovieGridItemBinding,
+        private val itemOnClick: (SearchItem) -> Unit
+    ) : RecyclerView.ViewHolder(gridViewBinding.root) {
 
         fun bind(searchItem: SearchItem) {
-            when (layoutViewType) {
-                LayoutViews.GRID_LAYOUT -> gridViewBindingT.searchItem = searchItem
-                LayoutViews.LIST_LAYOUT -> listViewBindingT.searchItem = searchItem
-            }
-
-            itemView.setOnClickListener {
-                itemOnClick(searchItem)
-            }
-
+            gridViewBinding.searchItem = searchItem
+            itemView.setOnClickListener { itemOnClick(searchItem) }
         }
-
     }
 
-
+    @SuppressLint("NotifyDataSetChanged")
+    fun changeItemLayout(layoutType: LayoutViews) {
+        layoutViewType = layoutType
+        notifyDataSetChanged()
+    }
 
     @SuppressLint("NotifyDataSetChanged")
     fun sortAToZ() {
-        var mutable: MutableList<SearchItem> = searchResults.toMutableList()
-        mutable.sortBy { it.title }
-        searchResults = mutable.toList() as ArrayList<SearchItem>
-        notifyDataSetChanged()
+        if (searchResults.size != 1) {
+            val mutable: MutableList<SearchItem> = searchResults.toMutableList()
+            mutable.sortBy { it.title }
+            searchResults = mutable.toList() as ArrayList<SearchItem>
+            notifyDataSetChanged()
+        }
     }
 
     @SuppressLint("NotifyDataSetChanged")
     fun sortZToA() {
-        var mutable: MutableList<SearchItem> = searchResults.toMutableList()
-        mutable.sortBy { it.title }
-        mutable.reverse()
-        searchResults = mutable.toList() as ArrayList<SearchItem>
-        notifyDataSetChanged()
+        if (searchResults.size != 1) {
+            val mutable: MutableList<SearchItem> = searchResults.toMutableList()
+            mutable.sortBy { it.title }
+            mutable.reverse()
+            searchResults = mutable.toList() as ArrayList<SearchItem>
+            notifyDataSetChanged()
+        }
     }
 
     @SuppressLint("NotifyDataSetChanged")
     fun sortOldToNew() {
-        var mutable: MutableList<SearchItem> = searchResults.toMutableList()
-        mutable.sortBy { it.year }
-        searchResults = mutable.toList() as ArrayList<SearchItem>
-        notifyDataSetChanged()
+        if (searchResults.size != 1) {
+            val mutable: MutableList<SearchItem> = searchResults.toMutableList()
+            mutable.sortBy { it.year }
+            searchResults = mutable.toList() as ArrayList<SearchItem>
+            notifyDataSetChanged()
+        }
     }
 
     @SuppressLint("NotifyDataSetChanged")
     fun sortNewToOld() {
-        var mutable: MutableList<SearchItem> = searchResults.toMutableList()
-        mutable.sortBy { it.year }
-        mutable.reverse()
-        searchResults = mutable.toList() as ArrayList<SearchItem>
-        notifyDataSetChanged()
+        if (searchResults.size != 1) {
+            val mutable: MutableList<SearchItem> = searchResults.toMutableList()
+            mutable.sortBy { it.year }
+            mutable.reverse()
+            searchResults = mutable.toList() as ArrayList<SearchItem>
+            notifyDataSetChanged()
+        }
     }
-
-
 }
 
 

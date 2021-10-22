@@ -5,9 +5,9 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.resurrection.movies.R
 import com.resurrection.movies.data.model.SearchItem
 import com.resurrection.movies.databinding.FragmentHomeBinding
@@ -20,7 +20,6 @@ import com.resurrection.movies.util.Status.SUCCESS
 import com.resurrection.movies.util.isNetworkAvailable
 import com.resurrection.movies.util.toast
 import dagger.hilt.android.AndroidEntryPoint
-import androidx.recyclerview.widget.RecyclerView
 
 @AndroidEntryPoint
 class HomeFragment : BaseFragment<FragmentHomeBinding>() {
@@ -36,26 +35,35 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
     override fun getLayoutRes(): Int = R.layout.fragment_home
 
     override fun init(savedInstanceState: Bundle?) {
+
         setupBaseFun()
+
         binding.swipeResfresLayout.setOnRefreshListener { refresh(tempList) }
 
         binding.homeRecyclerview.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                if (dy > 10 && (requireActivity() as MainActivity).getBottomNav().isShown()) {
-                    (requireActivity() as MainActivity).getBottomNav().setVisibility(View.GONE)
+                if (dy > 10 && (requireActivity() as MainActivity).getBottomNav().isShown) {
+                    (requireActivity() as MainActivity).getBottomNav().visibility = View.GONE
                 } else if (dy < 0) {
-                    (requireActivity() as MainActivity).getBottomNav().setVisibility(View.VISIBLE)
+                    (requireActivity() as MainActivity).getBottomNav().visibility = View.VISIBLE
                 }
             }
 
-            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
-                super.onScrollStateChanged(recyclerView, newState)
-            }
         })
     }
 
+    private fun setupBaseFun() {
+        setHasOptionsMenu(true)
+        (requireActivity() as MainActivity).setTextChangedFun { viewModel.getMovie(it) }
+        setAlertDialogs()
+        setViewModelsObserve()
+        viewModel.getMovie("Turkey")
+        toast = toast(requireContext(), "movie not found")
+        toast?.cancel()
+    }
+
     private fun setViewModelsObserve() {
-        viewModel.movie.observe(viewLifecycleOwner, Observer {
+        viewModel.movie.observe(viewLifecycleOwner, {
             when (it?.status) {
                 SUCCESS -> {
                     binding.progressBar.visibility = View.VISIBLE
@@ -63,8 +71,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
                         searchResult.data?.search?.let { refresh(it as ArrayList<SearchItem>) }
                             ?: run {
                                 toast?.show()
-                                binding.homeRecyclerview.adapter =
-                                    HomeAdapter(ArrayList(), currentLayoutView) {}
+                                binding.homeRecyclerview.adapter = null
                                 binding.progressBar.visibility = View.GONE
                                 isNetworkAvailable(requireContext())
                             }
@@ -75,17 +82,6 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
             }
         })
     }
-    fun setupBaseFun(){
-        setHasOptionsMenu(true)
-        (requireActivity() as MainActivity).getSearchView()?.cancelPendingInputEvents()
-        (requireActivity() as MainActivity).getSearchView()?.onCancelPendingInputEvents()
-        (requireActivity() as MainActivity).setTextChangedFun { viewModel.getMovie(it) }
-        setAlertDialogs()
-        setViewModelsObserve()
-        viewModel.getMovie("Turkey")
-        toast = toast(requireContext(), "movie not found")
-        toast?.cancel()
-    }
 
     private fun setAlertDialogs() {
         sortAlertDialog = (requireActivity() as MainActivity).setSortAlertDialog(
@@ -93,16 +89,20 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
             { adapter?.sortAToZ() },
             { adapter?.sortZToA() },
             { adapter?.sortOldToNew() },
-            { adapter?.sortOldToNew() })
+            { adapter?.sortNewToOld() })
         changeLayoutAlertDialog = (requireActivity() as MainActivity)
             .setRecyclerViewLayoutAlertDialog(
                 {
-                    currentLayoutView = LayoutViews.GRID_LAYOUT
-                    refresh(tempList)
+                    adapter?.changeItemLayout(LayoutViews.GRID_LAYOUT)
+                    binding.homeRecyclerview.layoutManager = GridLayoutManager(requireContext(), 2)
+                    binding.homeRecyclerview.adapter = adapter
                 },
                 {
-                    currentLayoutView = LayoutViews.LIST_LAYOUT
-                    refresh(tempList)
+                    adapter?.changeItemLayout(LayoutViews.LIST_LAYOUT)
+                    binding.homeRecyclerview.layoutManager =
+                        LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
+                    binding.homeRecyclerview.adapter = adapter
+
                 })
 
         (requireActivity() as MainActivity).getAlertDialogs(
