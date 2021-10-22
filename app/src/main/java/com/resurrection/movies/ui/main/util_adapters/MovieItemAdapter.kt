@@ -5,10 +5,10 @@ import com.resurrection.movies.data.model.SearchItem
 import com.resurrection.movies.ui.base.BaseAdapter
 
 class MovieItemAdapter<T, viewDataBinding : ViewDataBinding>(
-    private var mLayoutResource: Int,
-    private var mList: ArrayList<T>,
-    private var mItemId: Int,
-    private var mOnItemClick: (T) -> Unit
+    mLayoutResource: Int,
+    mList: ArrayList<T>,
+    mItemId: Int,
+    mOnItemClick: (T) -> Unit
 ) : BaseAdapter<T, viewDataBinding>(mLayoutResource, mList, mItemId, mOnItemClick) {
 
     fun sortAToZ() {

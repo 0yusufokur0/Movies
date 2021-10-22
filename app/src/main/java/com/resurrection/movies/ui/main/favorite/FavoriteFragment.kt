@@ -7,13 +7,15 @@ import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.resurrection.movies.BR
 import com.resurrection.movies.R
 import com.resurrection.movies.data.model.SearchItem
 import com.resurrection.movies.databinding.FragmentFavoriteBinding
+import com.resurrection.movies.databinding.MovieGridItemBinding
 import com.resurrection.movies.ui.base.BaseFragment
 import com.resurrection.movies.ui.main.MainActivity
 import com.resurrection.movies.ui.main.detail.DetailFragment
-import com.resurrection.movies.ui.main.home.HomeAdapter
+import com.resurrection.movies.ui.main.util_adapters.MovieItemAdapter
 import com.resurrection.movies.util.LayoutViews
 import com.resurrection.movies.util.Status.*
 import com.resurrection.movies.util.isNetworkAvailable
@@ -23,7 +25,7 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class FavoriteFragment : BaseFragment<FragmentFavoriteBinding>(){
     private val viewModel: FavoriteViewModel by viewModels()
-    private var adapter: HomeAdapter? = null
+    private var adapter: MovieItemAdapter<SearchItem, MovieGridItemBinding>? = null
     private var sortAlertDialog: AlertDialog? = null
     private var tempList: ArrayList<SearchItem>? = ArrayList()
     private var toast: Toast? = null
@@ -80,20 +82,16 @@ class FavoriteFragment : BaseFragment<FragmentFavoriteBinding>(){
             { adapter?.sortNewToOld() })
         changeLayoutAlertDialog = (requireActivity() as MainActivity)
             .setRecyclerViewLayoutAlertDialog(
-                {
-                    currentLayoutView = LayoutViews.GRID_LAYOUT
-                    tempList?.let { refresh(it) }
-                },
-                {
-                    currentLayoutView = LayoutViews.LIST_LAYOUT
-                    tempList?.let { refresh(it) }
-                })
+                { currentLayoutView = LayoutViews.GRID_LAYOUT
+                    refresh(tempList)
+                }, {
+                   currentLayoutView = LayoutViews.LIST_LAYOUT
+                   refresh(tempList) })
 
         (requireActivity() as MainActivity).getAlertDialogs(
             sortAlertDialog,
             changeLayoutAlertDialog
         )
-
     }
 
     private fun refresh(it: ArrayList<SearchItem>?) {
@@ -102,21 +100,29 @@ class FavoriteFragment : BaseFragment<FragmentFavoriteBinding>(){
         toast?.cancel()
         
         when (currentLayoutView) {
-            LayoutViews.GRID_LAYOUT -> binding.favoriteRecyclerview.layoutManager =
-                GridLayoutManager(requireContext(), 2)
-            LayoutViews.LIST_LAYOUT -> binding.favoriteRecyclerview.layoutManager =
-                LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
-        }
-        adapter =
-            it?.let {
-                HomeAdapter(it, currentLayoutView) { searchItem ->
-                    val searchItemDetail = DetailFragment()
-                    val bundle = Bundle()
-                    bundle.putString("movieId", searchItem.imdbID)
-                    searchItemDetail.arguments = bundle
-                    searchItemDetail.show(parentFragmentManager, "Bottom Sheet")
-                }
+            LayoutViews.GRID_LAYOUT -> {
+                binding.favoriteRecyclerview.layoutManager =
+                    GridLayoutManager(requireContext(), 2)
+                binding.favoriteRecyclerview.layoutManager = GridLayoutManager(requireContext(), 2)
+                adapter = MovieItemAdapter(
+                    R.layout.movie_grid_item,
+                    it!!,
+                    BR.searchItem,
+                    this::onAdapterClick
+                )
             }
+            LayoutViews.LIST_LAYOUT -> {
+                binding.favoriteRecyclerview.layoutManager =
+                    LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
+                adapter = MovieItemAdapter(
+                    R.layout.movie_row_item,
+                    it!!,
+                    BR.searchItem,
+                    this::onAdapterClick
+                )
+            }
+        }
+
         binding.favoriteRecyclerview.adapter = adapter
         binding.progressBar.visibility = View.GONE
         if (isNetworkAvailable(requireContext())) {
@@ -124,5 +130,12 @@ class FavoriteFragment : BaseFragment<FragmentFavoriteBinding>(){
         }
         binding.swipeResfresLayout.isRefreshing = false
 
+    }
+    fun onAdapterClick(searchItem: SearchItem){
+        val searchItemDetail = DetailFragment()
+        val bundle = Bundle()
+        bundle.putString("movieId", searchItem.imdbID)
+        searchItemDetail.arguments = bundle
+        searchItemDetail.show(parentFragmentManager, "Bottom Sheet")
     }
 }

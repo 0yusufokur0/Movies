@@ -9,7 +9,6 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.resurrection.movies.BR
-import com.resurrection.movies.ui.main.util_adapters.MovieItemAdapter
 import com.resurrection.movies.R
 import com.resurrection.movies.data.model.SearchItem
 import com.resurrection.movies.databinding.FragmentHomeBinding
@@ -17,6 +16,7 @@ import com.resurrection.movies.databinding.MovieGridItemBinding
 import com.resurrection.movies.ui.base.BaseFragment
 import com.resurrection.movies.ui.main.MainActivity
 import com.resurrection.movies.ui.main.detail.DetailFragment
+import com.resurrection.movies.ui.main.util_adapters.MovieItemAdapter
 import com.resurrection.movies.util.LayoutViews
 import com.resurrection.movies.util.Status.ERROR
 import com.resurrection.movies.util.Status.SUCCESS
@@ -39,6 +39,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
 
     override fun init(savedInstanceState: Bundle?) {
 
+
         setupBaseFun()
 
         binding.swipeResfresLayout.setOnRefreshListener { refresh(tempList) }
@@ -51,7 +52,6 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
                     (requireActivity() as MainActivity).getBottomNav().visibility = View.VISIBLE
                 }
             }
-
         })
     }
 
@@ -71,7 +71,9 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
                 SUCCESS -> {
                     binding.progressBar.visibility = View.VISIBLE
                     it.let { searchResult ->
-                        searchResult.data?.search?.let { refresh(it as ArrayList<SearchItem>) }
+                        searchResult.data?.search?.let {
+                            refresh(it as ArrayList<SearchItem>)
+                        }
                             ?: run {
                                 toast?.show()
                                 binding.homeRecyclerview.adapter = null
@@ -92,21 +94,15 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
             { adapter?.sortAToZ() },
             { adapter?.sortZToA() },
             { adapter?.sortOldToNew() },
-            { adapter?.sortNewToOld()}
+            { adapter?.sortNewToOld() }
         )
         changeLayoutAlertDialog = (requireActivity() as MainActivity)
             .setRecyclerViewLayoutAlertDialog(
-                {
-                  /*  adapter?.changeItemLayout(LayoutViews.GRID_LAYOUT)*/
-                    binding.homeRecyclerview.layoutManager = GridLayoutManager(requireContext(), 2)
-                    binding.homeRecyclerview.adapter = adapter
-                },
-                {
-                   /* adapter?.changeItemLayout(LayoutViews.LIST_LAYOUT)*/
-                    binding.homeRecyclerview.layoutManager =
-                        LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
-                    binding.homeRecyclerview.adapter = adapter
-
+                { currentLayoutView = LayoutViews.GRID_LAYOUT
+                    refresh(tempList)
+                }, {
+                    currentLayoutView = LayoutViews.LIST_LAYOUT
+                    refresh(tempList)
                 })
 
         (requireActivity() as MainActivity).getAlertDialogs(
@@ -119,28 +115,28 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
         tempList = it
         toast?.cancel()
         when (currentLayoutView) {
-            LayoutViews.GRID_LAYOUT -> binding.homeRecyclerview.layoutManager =
-                GridLayoutManager(requireContext(), 2)
-            LayoutViews.LIST_LAYOUT -> binding.homeRecyclerview.layoutManager =
-                LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
+            LayoutViews.GRID_LAYOUT -> {
+                binding.homeRecyclerview.layoutManager = GridLayoutManager(requireContext(), 2)
+                adapter = MovieItemAdapter(
+                        R.layout.movie_grid_item,
+                        it!!,
+                        BR.searchItem,
+                        this::onAdapterClick
+                    )
+            }
+
+            LayoutViews.LIST_LAYOUT -> {
+                binding.homeRecyclerview.layoutManager =
+                    LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
+                adapter = MovieItemAdapter(
+                    R.layout.movie_row_item,
+                    it!!,
+                    BR.searchItem,
+                    this::onAdapterClick
+                )
+            }
         }
- /*       adapter =
-            it?.let {
-                HomeAdapter(it, currentLayoutView) { searchItem ->
-                    searchItemDetail = DetailFragment()
-                    val bundle = Bundle()
-                    bundle.putString("movieId", searchItem.imdbID)
-                    searchItemDetail!!.arguments = bundle
-                    searchItemDetail!!.show(parentFragmentManager, "Bottom Sheet")
-                }
-            }*/
-        adapter = MovieItemAdapter(R.layout.movie_grid_item,it!!, BR.searchItem) { searchItem ->
-            searchItemDetail = DetailFragment()
-            val bundle = Bundle()
-            bundle.putString("movieId", searchItem.imdbID)
-            searchItemDetail!!.arguments = bundle
-            searchItemDetail!!.show(parentFragmentManager, "Bottom Sheet")
-        }
+
         binding.homeRecyclerview.adapter = adapter
         binding.progressBar.visibility = View.GONE
         if (isNetworkAvailable(requireContext())) {
@@ -152,5 +148,13 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
     override fun onResume() {
         super.onResume()
         viewModel.getMovie("turkey")
+    }
+
+    private fun onAdapterClick(searchItem: SearchItem) {
+        searchItemDetail = DetailFragment()
+        val bundle = Bundle()
+        bundle.putString("movieId", searchItem.imdbID)
+        searchItemDetail!!.arguments = bundle
+        searchItemDetail!!.show(parentFragmentManager, "Bottom Sheet")
     }
 }
