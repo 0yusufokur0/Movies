@@ -8,9 +8,12 @@ import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.resurrection.movies.BR
+import com.resurrection.movies.ui.main.util_adapters.MovieItemAdapter
 import com.resurrection.movies.R
 import com.resurrection.movies.data.model.SearchItem
 import com.resurrection.movies.databinding.FragmentHomeBinding
+import com.resurrection.movies.databinding.MovieGridItemBinding
 import com.resurrection.movies.ui.base.BaseFragment
 import com.resurrection.movies.ui.main.MainActivity
 import com.resurrection.movies.ui.main.detail.DetailFragment
@@ -25,7 +28,7 @@ import dagger.hilt.android.AndroidEntryPoint
 class HomeFragment : BaseFragment<FragmentHomeBinding>() {
     val viewModel: HomeViewModel by viewModels()
     private var searchItemDetail: DetailFragment? = null
-    private var adapter: HomeAdapter? = null
+    private var adapter: MovieItemAdapter<SearchItem, MovieGridItemBinding>? = null
     private var toast: Toast? = null
     private var sortAlertDialog: AlertDialog? = null
     var changeLayoutAlertDialog: AlertDialog? = null
@@ -89,16 +92,17 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
             { adapter?.sortAToZ() },
             { adapter?.sortZToA() },
             { adapter?.sortOldToNew() },
-            { adapter?.sortNewToOld() })
+            { adapter?.sortNewToOld()}
+        )
         changeLayoutAlertDialog = (requireActivity() as MainActivity)
             .setRecyclerViewLayoutAlertDialog(
                 {
-                    adapter?.changeItemLayout(LayoutViews.GRID_LAYOUT)
+                  /*  adapter?.changeItemLayout(LayoutViews.GRID_LAYOUT)*/
                     binding.homeRecyclerview.layoutManager = GridLayoutManager(requireContext(), 2)
                     binding.homeRecyclerview.adapter = adapter
                 },
                 {
-                    adapter?.changeItemLayout(LayoutViews.LIST_LAYOUT)
+                   /* adapter?.changeItemLayout(LayoutViews.LIST_LAYOUT)*/
                     binding.homeRecyclerview.layoutManager =
                         LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
                     binding.homeRecyclerview.adapter = adapter
@@ -120,7 +124,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
             LayoutViews.LIST_LAYOUT -> binding.homeRecyclerview.layoutManager =
                 LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
         }
-        adapter =
+ /*       adapter =
             it?.let {
                 HomeAdapter(it, currentLayoutView) { searchItem ->
                     searchItemDetail = DetailFragment()
@@ -129,7 +133,14 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
                     searchItemDetail!!.arguments = bundle
                     searchItemDetail!!.show(parentFragmentManager, "Bottom Sheet")
                 }
-            }
+            }*/
+        adapter = MovieItemAdapter(R.layout.movie_grid_item,it!!, BR.searchItem) { searchItem ->
+            searchItemDetail = DetailFragment()
+            val bundle = Bundle()
+            bundle.putString("movieId", searchItem.imdbID)
+            searchItemDetail!!.arguments = bundle
+            searchItemDetail!!.show(parentFragmentManager, "Bottom Sheet")
+        }
         binding.homeRecyclerview.adapter = adapter
         binding.progressBar.visibility = View.GONE
         if (isNetworkAvailable(requireContext())) {
