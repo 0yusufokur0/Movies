@@ -21,10 +21,13 @@ class HomeViewModel @Inject constructor(val movieRepository: MovieRepository) : 
     val movie: LiveData<Resource<SearchResults>> = _movie
 
     fun getMovie(id: String) = viewModelScope.launch {
+
             movieRepository.getMovieById(id, 1)
                 .onStart { _movie.postValue(Resource.Loading()) }
                 .catch { message -> _movie.postValue(Resource.Error(message)) }
                 .collect { _movie.postValue(it) }
+
+
     }
 
 }

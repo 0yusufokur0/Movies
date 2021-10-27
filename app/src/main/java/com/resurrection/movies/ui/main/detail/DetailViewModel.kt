@@ -29,6 +29,8 @@ open class DetailViewModel @Inject constructor(private val movieRepository: Movi
     val movieDetail: LiveData<Resource<MovieDetails>> = _movieDetail
     val isFavorite: LiveData<Resource<Boolean>> = _isFavorite
 
+    var deneme =  MutableLiveData<Resource<Boolean>>()
+
     fun getMovieDetail(id: String)  = viewModelScope.launch{
             movieRepository.getMovieDetail(id)
                 .onStart { _movieDetail.postValue(Resource.Loading()) }
@@ -59,5 +61,13 @@ open class DetailViewModel @Inject constructor(private val movieRepository: Movi
                 .collect {
                     it.data?.let { _isRemoved.postValue(Resource.Success(true)) }
                         ?: run { _isRemoved.postValue(Resource.Success(false)) } }
+    }
+
+    fun deneme(sayi:Int){
+        if (sayi == 1){
+            deneme.postValue(Resource.Success(true))
+        }else{
+            deneme.postValue(Resource.Success(false))
+        }
     }
 }
