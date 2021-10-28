@@ -29,7 +29,6 @@ open class DetailViewModel @Inject constructor(private val movieRepository: Movi
     val movieDetail: LiveData<Resource<MovieDetails>> = _movieDetail
     val isFavorite: LiveData<Resource<Boolean>> = _isFavorite
 
-    var deneme =  MutableLiveData<Resource<Boolean>>()
 
     fun getMovieDetail(id: String)  = viewModelScope.launch{
             movieRepository.getMovieDetail(id)
@@ -39,19 +38,25 @@ open class DetailViewModel @Inject constructor(private val movieRepository: Movi
     }
 
     fun insertMovie(searchItem: SearchItem)  = viewModelScope.launch{
+        if (searchItem.imdbID.isNotEmpty()){
             movieRepository.insertMovie(searchItem)
                 .onStart { _insertMovie.postValue(Resource.Loading()) }
                 .catch { message -> _insertMovie.postValue(Resource.Error(message)) }
                 .collect { _insertMovie.postValue(Resource.Success(null)) }
+        } else  _insertMovie.postValue(Resource.Error(null))
+
     }
 
     fun getMovieFavoriteState(id: String)  = viewModelScope.launch{
+        if (id.isNotEmpty()){
             movieRepository.getMovieById(id)
                 .onStart { _isFavorite.postValue(Resource.Loading()) }
                 .catch { message -> _isFavorite.postValue(Resource.Error(message)) }
                 .collect {
                     it.data?.let { _isFavorite.postValue(Resource.Success(true)) }
                         ?: run { _isFavorite.postValue(Resource.Success(false)) } }
+        }else _isFavorite.postValue(Resource.Error(null))
+
     }
 
     fun removeMovie(searchItem: SearchItem)  = viewModelScope.launch{
@@ -63,11 +68,5 @@ open class DetailViewModel @Inject constructor(private val movieRepository: Movi
                         ?: run { _isRemoved.postValue(Resource.Success(false)) } }
     }
 
-    fun deneme(sayi:Int){
-        if (sayi == 1){
-            deneme.postValue(Resource.Success(true))
-        }else{
-            deneme.postValue(Resource.Success(false))
-        }
-    }
+
 }
