@@ -1,4 +1,3 @@
-
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
@@ -35,13 +34,12 @@ class MovieDaoTest {
     }
 
     @After
-    fun tearDown(){
+    fun tearDown() {
         database.close()
     }
 
-
     @Test
-    fun insertMovieTest() = runBlockingTest{
+    fun insertMovieTest() = runBlockingTest {
         var exampleMovie = SearchItem("asd", "asd", "sdf", "fgd", "fdg")
         movieDao.insertMovie(exampleMovie)
 
@@ -51,6 +49,43 @@ class MovieDaoTest {
 
     }
 
+    @Test
+    fun deleteMovie() = runBlockingTest {
+        var exampleMovie = SearchItem("asd", "asd", "sdf", "fgd", "fdg")
+        movieDao.insertMovie(exampleMovie)
+        movieDao.removeMovie(exampleMovie)
+
+        val value = movieDao.getFavoriteMovies()
+        assertThat(value).doesNotContain(exampleMovie)
+
+    }
+
+    @Test
+    fun getMovieById() = runBlockingTest {
+
+        var exampleMovie = SearchItem("asd", "asd", "sdf", "fgd", "fdg")
+        movieDao.insertMovie(exampleMovie)
+        val value = movieDao.getMovieById(exampleMovie.imdbID)
+        assertThat(value).isEqualTo(exampleMovie)
+    }
+
+    @Test
+    fun getMovieByTitle() = runBlockingTest {
+        var first: SearchItem = SearchItem("asd", "asd", "sdf", "fgd", "fff")
+        var second: SearchItem = SearchItem("asgfdsd", "asd", "sdf", "fgd", "fff")
+        var third: SearchItem = SearchItem("aetwetsd", "asd", "sdf", "fgd", "xxx")
+        movieDao.insertMovie(first)
+        movieDao.insertMovie(second)
+        movieDao.insertMovie(third)
+
+        val value = movieDao.getMovieByTitle("ff")
+
+        assertThat(value.size).isEqualTo(2)
+        assertThat(value).contains(first)
+        assertThat(value).contains(second)
+        assertThat(value).doesNotContain(third)
+
+    }
 
 }
 
